@@ -1,0 +1,32 @@
+# Creating docker image
+FROM golang:1.22.2-alpine AS builder
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go module files
+COPY ./backend/go.mod ./backend/go.sum ./
+
+# Download and install Go dependencies
+RUN go mod download
+
+# Copy the rest of the application source code
+COPY ./backend .
+
+# Build the Go application
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./server.go
+
+# Stage 2: Final image
+FROM alpine:latest
+
+# Set the working directory for the final image
+WORKDIR /app
+
+# Copy the built Go binary from the builder stage
+COPY --from=builder /app/server .
+
+# Expose port for the Go backend
+EXPOSE 8080
+
+# Command to run the Go backend
+CMD ["./server"]

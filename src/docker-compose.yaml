@@ -1,0 +1,17 @@
+services:
+  backend:
+    container_name: go-backend
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    ports:
+      - "8080:8080"
+  frontend:
+    container_name: nextjs-frontend
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile-frontend
+    ports:
+      - "3000:3000"
