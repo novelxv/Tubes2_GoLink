@@ -1,4 +1,4 @@
-package utils
+package scraper
 
 import (
 	"github.com/gocolly/colly"
@@ -38,20 +38,20 @@ func Scraper(linkName string ) ([]Link, error){
 		links = append(links, item)
 	})
 	
-	// When first requested
-    c.OnRequest(func(r *colly.Request) {
-        fmt.Println("Visiting", r.URL)
-    })
+	// // When first requested
+    // c.OnRequest(func(r *colly.Request) {
+    //     fmt.Println("Visiting", r.URL)
+    // })
 
-	// When received a response
-    c.OnResponse(func(r *colly.Response) {
-        fmt.Println("Got a response from", r.Request.URL)
-    })
+	// // When received a response
+    // c.OnResponse(func(r *colly.Response) {
+    //     fmt.Println("Got a response from", r.Request.URL)
+    // })
 
-	// When encountering an error
-    c.OnError(func(r *colly.Response, e error) {
-        fmt.Println("Error:", e)
-    })
+	// // When encountering an error
+    // c.OnError(func(r *colly.Response, e error) {
+    //     fmt.Println("Error:", e)
+    // })
 
 	// Visiting the link and scraping
     err := c.Visit(linkName)

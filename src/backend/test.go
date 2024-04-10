@@ -1,16 +1,15 @@
 package main
 
-import(
-	"log"
-	"github.com/angiekierra/Tubes2_GoLink/utils"
+import (
+	"github.com/angiekierra/Tubes2_GoLink/ids"
+	"github.com/angiekierra/Tubes2_GoLink/tree"
 )
 
 func main() {
-	linkName := utils.StringToWikiUrl("Fourth Extraordinary Session of the Islamic Summit Conference") 
-	links, err := utils.Scraper(linkName)
-	if err != nil {
-		log.Fatal("Error scraping:", err)
-	}
+	// Panggil idsfunc untuk membuat pohon
+	var test *tree.Tree
+	test = ids.Idsfunc("Joko Widodo", "Jusuf Kalla")
 
-	utils.PrintLink(links) 
+	// Cetak struktur pohon menggunakan metode PrintTreeIds
+	test.PrintTreeIds()
 }
