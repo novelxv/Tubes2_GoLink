@@ -33,6 +33,17 @@
       --ring: 222.2 84% 4.9%;
 
       --radius: 0.5rem;
+
+      --color-text-base : #fff;
+      --color-text-muted : #8395A9;
+
+      --color-emerald-400 : #1CD0A1;
+      --color-neutral-800 : #252525;
+      --color-violet-700 : #6027CC;
+      --color-rose-400 : #FB7185;
+      --color-red-400 : #FF6B6B;
+
+      --font-raleway: 'Raleway', sans-serif;
     }
 
     .dark {
@@ -64,6 +75,7 @@
       --input: 217.2 32.6% 17.5%;
       --ring: 212.7 26.8% 83.9%;
     }
+
   }
 
   @layer base {

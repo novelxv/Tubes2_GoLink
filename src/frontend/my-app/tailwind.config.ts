@@ -19,6 +19,13 @@ const config = {
     },
     extend: {
       colors: {
+        "neutral-100": "var(--color-text-base)",
+        "neutral-400": "var(--color-text-muted)",
+        "emerald-400": "var(--color-emerald-400)",
+        "neutral-800": "var(--color-neutral-800)",
+        "violet-700": "var(--color-violet-700)",
+        "rose-400": "var(--color-rose-400)",
+        "red-400": "var(--color-red-400)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -72,6 +79,9 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontFamily: {
+        raleway: ["var(--font-raleway)"],
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

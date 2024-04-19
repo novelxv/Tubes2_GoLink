@@ -5,16 +5,16 @@ FROM golang:1.22.2-alpine AS builder
 WORKDIR /app
 
 # Copy the Go module files
-COPY ./backend/go.mod ./backend/go.sum ./
+COPY go.mod go.sum ./ 
 
 # Download and install Go dependencies
 RUN go mod download
 
 # Copy the rest of the application source code
-COPY ./backend .
+COPY . .
 
 # Build the Go application
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./server.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server server.go
 
 # Stage 2: Final image
 FROM alpine:latest
