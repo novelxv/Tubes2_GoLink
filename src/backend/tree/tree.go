@@ -39,6 +39,13 @@ func (n *Tree) AddVisitedNode() {
     n.Visited = true
 }
 
+// function to check if the current value is the same with the goal
+func isGoalFound(s1 string, s2 string) bool {
+	return s1 == s2
+}
+
+/* IDS */
+
 // print only the visited node
 func (n *Tree) PrintTreeIds() {
 	if n.Visited {
@@ -105,7 +112,44 @@ func (n *Tree) SearhForGoal(found *bool, goal string, init *int, level int) bool
 	return *found
 }
 
-// function to check if the current value is the same with the goal
-func isGoalFound(s1 string, s2 string) bool {
-	return s1 == s2
+/* BFS */
+
+// function to print the tree using BFS
+func (n *Tree) PrintTreeBfs() {
+	queue := []*Tree{n}
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+		if current.Visited {
+			fmt.Printf("%s", current.Value)
+			queue = append(queue, current.Children...)
+		}
+	}
+	fmt.Println()
+}
+
+// function to search the word goal recursively in BFS
+func (n *Tree) SearhForGoalBfs(goal string) bool {
+	queue := []*Tree{n}
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+		current.Visited = true
+		fmt.Printf("%s \n", current.Value)
+		if isGoalFound(current.Value, goal) {
+			fmt.Print("Found!!\n")
+			return true
+		}
+		
+		linkName := scraper.StringToWikiUrl(current.Value)
+		links, _ := scraper.Scraper(linkName)
+		current.NewNodeLink(links)
+
+		for _, child := range current.Children {
+			if !child.Visited {
+				queue = append(queue, child)
+			}
+		}
+	}
+	return false
 }
