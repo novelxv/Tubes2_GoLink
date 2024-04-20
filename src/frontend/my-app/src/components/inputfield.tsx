@@ -1,9 +1,15 @@
-import { Input } from '@/components/ui/input'
-import React from 'react'
+import { Input } from '@/components/ui/input';
+import React from 'react';
 
-const InputField = () => {
+interface InputFieldProps {
+    placeholder?: string;
+}
+
+const InputField: React.FC<InputFieldProps> = ({ placeholder }) => {
     return (
-        <Input className='font-raleway text-neutral-400' placeholder='Enter Link'/>
+        <div className='p-5'>
+            <Input className='font-raleway text-neutral-400' placeholder={placeholder} />
+        </div>
     );
 };
 
