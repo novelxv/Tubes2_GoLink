@@ -1,10 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import InputField from './inputField';
-import Toggle from './toggle';
+import { Input } from '@/components/ui/input';
+import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
+import axios from 'axios';
 
 const Entry = () => {
+    const [startLink, setStartLink] = useState('');
+    const [endLink, setEndLink] = useState('');
+    const [useToggle, setUseToggle] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/input', {
+                startLink: startLink,
+                endLink: endLink,
+                useToggle: useToggle
+            });
+
+            console.log('Server response: ', response.data);
+        } catch (error) {
+            console.error('Error sending the data', error);
+        }
+    };
+
+    const handleSwitchChange = () => {
+        setUseToggle(!useToggle);
+    };
+
     return (
         <div className='bg-neutral-800 flex flex-col items-center justify-center h-screen '>
             <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
@@ -12,19 +37,42 @@ const Entry = () => {
             <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-2"></div>
             <div className='z-0'>
                 <Image src="/images/logo.png" alt='logo' width={872} height={165} />
-                <div className='flex flex-col items-center justify-center font-raleway text-neutral-100 p-7'>
-                    <p className='flex-auto text-2xl xl:text-3xl'>Find the <b>shortest path</b> from</p>
-                    <div className='flex flex-col xl:flex-row xl:gap-1  items-center' >
-                        <InputField placeholder='Start Link'/>
-                        <p className='text-lg'>to</p>
-                        <InputField placeholder='End Link'/>
+                <form onSubmit={handleSubmit}>
+                    <div className='flex flex-col items-center justify-center font-raleway text-neutral-100 p-7'>
+                        <p className='flex-auto text-2xl xl:text-3xl'>Find the <b>shortest path</b> from</p>
+                        <div className='flex flex-col xl:flex-row xl:gap-1  items-center' >
+                            <div className='p-5'>
+                                <Input 
+                                    className='font-raleway text-neutral-400' 
+                                    placeholder='Start Link'
+                                    value={startLink}
+                                    onChange={(e) => setStartLink(e.target.value)} 
+                                />
+                            </div>
+                            <p className='text-lg'>to</p>
+                            <div className='p-5'>
+                                <Input 
+                                    className='font-raleway text-neutral-400' 
+                                    placeholder='End Link'
+                                    value={endLink}
+                                    onChange={(e) => setEndLink(e.target.value)} 
+                                />
+                            </div>
+                        </div>
+                        <div className='flex flex-col gap-3'>
+                            <p className='text-center text-xl'>using</p>
+                            <div className="flex flex-row gap-3 pb-5">
+                                <p className="text-neutral-100 text-lg"><b>IDS</b></p>
+                                <Switch
+                                    checked={useToggle}
+                                    onCheckedChange={handleSwitchChange}
+                                />
+                                <p className="text-neutral-100 text-lg"><b>BFS</b></p>
+                            </div>
+                        </div>
+                        <Button type='submit' variant="default">Search Now</Button>
                     </div>
-                    <div className='flex flex-col gap-3'>
-                        <p className='text-center text-xl'>using</p>
-                        <Toggle/>
-                    </div>
-                    <Button variant="default">Search Now</Button>
-                </div>
+                </form>
             </div>
         </div>
     );

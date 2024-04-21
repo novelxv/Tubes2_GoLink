@@ -4,6 +4,7 @@ import (
 	"github.com/gocolly/colly"
 	"fmt"
 	"strings"
+	"regexp"
 )
 
 type Link struct {
@@ -30,28 +31,34 @@ func Scraper(linkName string ) ([]Link, error){
 	
 	var links []Link
 	
+	urlPattern := regexp.MustCompile(`^/wiki/..*`)
+
 	// Only selects a element with title attributes
 	c.OnHTML("a[title]",func(h *colly.HTMLElement) {
-		item := Link {}
-		item.Name = h.Attr("title")
-		item.Url = "https://en.wikipedia.org" + h.Attr("href") // Concatenating into string
-		links = append(links, item)
+		link := h.Attr("href")
+
+		if urlPattern.MatchString(link) {
+			item := Link {}
+			item.Name = h.Attr("title")
+			item.Url = "https://en.wikipedia.org" + link
+			links = append(links, item)
+		}
 	})
 	
-	// // When first requested
-    // c.OnRequest(func(r *colly.Request) {
-    //     fmt.Println("Visiting", r.URL)
-    // })
+	// When first requested
+    c.OnRequest(func(r *colly.Request) {
+        fmt.Println("Visiting", r.URL)
+    })
 
-	// // When received a response
-    // c.OnResponse(func(r *colly.Response) {
-    //     fmt.Println("Got a response from", r.Request.URL)
-    // })
+	// When received a response
+    c.OnResponse(func(r *colly.Response) {
+        fmt.Println("Got a response from", r.Request.URL)
+    })
 
-	// // When encountering an error
-    // c.OnError(func(r *colly.Response, e error) {
-    //     fmt.Println("Error:", e)
-    // })
+	// When encountering an error
+    c.OnError(func(r *colly.Response, e error) {
+        fmt.Println("Error:", e)
+    })
 
 	// Visiting the link and scraping
     err := c.Visit(linkName)
