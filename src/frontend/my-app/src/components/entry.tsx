@@ -4,15 +4,18 @@ import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 import axios from 'axios';
+import Loading from './loading';
 
 const Entry = () => {
     const [startLink, setStartLink] = useState('');
     const [endLink, setEndLink] = useState('');
     const [useToggle, setUseToggle] = useState(false);
+    const [responseData, setResponseData] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/api/input', {
                 startLink: startLink,
@@ -20,9 +23,12 @@ const Entry = () => {
                 useToggle: useToggle
             });
 
-            console.log('Server response: ', response.data);
+            setResponseData(response.data);
+            // console.log('Server response: ', response.data);
         } catch (error) {
             console.error('Error sending the data', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -31,10 +37,10 @@ const Entry = () => {
     };
 
     return (
-        <div className='bg-neutral-800 flex flex-col items-center justify-center h-screen '>
-            <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
-            <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-2"></div>
-            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-2"></div>
+        <div className='bg-neutral-800 flex flex-col items-center justify-center min-h-screen relative'>
+            <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-5"></div>
+            <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-6"></div>
+            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-7"></div>
             <div className='z-0'>
                 <Image src="/images/logo.png" alt='logo' width={872} height={165} />
                 <form onSubmit={handleSubmit}>
@@ -73,6 +79,22 @@ const Entry = () => {
                         <Button type='submit' variant="default">Search Now</Button>
                     </div>
                 </form>
+                {loading && (
+                    <div>
+                        <p className='text-neutral-100 text-xl'>Loading...</p>
+                    </div>
+                )}
+                {responseData && (
+                    <div>
+                        <p>Start Link: {responseData.startLink}</p>
+                        <p>End Link: {responseData.endLink}</p>
+                        <p>Use Toggle: {String(responseData.useToggle)}</p>
+                    </div>
+                )}
+                {/* <div className='z-0'>
+                    <Loading/>
+                </div> */}
+                
             </div>
         </div>
     );

@@ -21,6 +21,7 @@ const config = {
       colors: {
         "neutral-100": "var(--color-text-base)",
         "neutral-400": "var(--color-text-muted)",
+        "yellow-300": '#f6cc6e',
         "emerald-400": "var(--color-emerald-400)",
         "neutral-800": "var(--color-neutral-800)",
         "violet-700": "var(--color-violet-700)",
@@ -81,7 +82,7 @@ const config = {
       },
       fontFamily: {
         raleway: ["var(--font-raleway)"],
-      }
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
