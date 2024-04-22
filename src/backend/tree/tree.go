@@ -8,10 +8,9 @@ import (
 
 type Tree struct {
 	Value    string // the link name
-	Visited	 bool // check whether a node has already been visited or not
+	Visited  bool   // check whether a node has already been visited or not
 	Children []*Tree
 }
-
 
 // function to make a New Node from string
 func NewNode(value string) *Tree {
@@ -36,7 +35,7 @@ func (n *Tree) AddChild(child *Tree) {
 
 // fuunction to make node visited
 func (n *Tree) AddVisitedNode() {
-    n.Visited = true
+	n.Visited = true
 }
 
 // function to check if the current value is the same with the goal
@@ -49,64 +48,65 @@ func isGoalFound(s1 string, s2 string) bool {
 // print only the visited node
 func (n *Tree) PrintTreeIds() {
 	if n.Visited {
-        // print the current value
-        fmt.Printf("%s", n.Value)
+		// print the current value
+		fmt.Printf("%s", n.Value)
 
-        if len(n.Children) > 0 {
-            fmt.Printf(" (")
+		if len(n.Children) > 0 {
+			fmt.Printf("ANAKK (")
 
-            // print all the children 
-            visitedChildren := make([]*Tree, 0)
+			// print all the children
+			visitedChildren := make([]*Tree, 0)
 			// saving only the visited children
-            for _, child := range n.Children {
-                if child.Visited {
-                    visitedChildren = append(visitedChildren, child)
-                }
-            }
+			for _, child := range n.Children {
+				if child.Visited {
+					visitedChildren = append(visitedChildren, child)
+				}
+			}
 
-            for i, child := range visitedChildren {
-                child.PrintTreeIds()
-                if i < len(visitedChildren)-1 {
-                    fmt.Printf(", ")
-                }
-            }
+			for i, child := range visitedChildren {
+				child.PrintTreeIds()
+				if i < len(visitedChildren)-1 {
+					fmt.Printf(", ")
+				}
+			}
 
-            fmt.Printf(")")
-        } else {
-            fmt.Printf(" ()")
-        }
-    }
+			fmt.Printf(")")
+		} else {
+			fmt.Printf(" ()")
+		}
+	}
 }
 
 // function to search the word goal recursively in IDS
-func (n *Tree) SearhForGoal(found *bool, goal string, init *int, level int) bool {
-	*found = isGoalFound(n.Value, goal) // check the current value with the goal
-	fmt.Printf("%s \n", n.Value)
-	n.AddVisitedNode() // make the node visited
+func (n *Tree) SearhForGoal(found *bool, goal string, level int) bool {
+	if level>=0 {
+		*found = isGoalFound(n.Value, goal) // check the current value with the goal
+		fmt.Printf("%s \n", n.Value)
+		n.AddVisitedNode() // make the node visited
 
-	// Goal founded
-	if *found {
-		fmt.Print("Found!!\n")
-		return true 
-	}
-
-	// search for another level if not founded yet
-	if len(n.Children) == 0 && *init < level {
-		linkName := scraper.StringToWikiUrl(n.Value)
-		links, _ := scraper.Scraper(linkName)
-		n.NewNodeLink(links)
-		*init+=1
-		if *init == level{
-			*init=1
-		}
-	}
-
-	// if goal not found yet, go to the next children
-	for _, child := range n.Children {
-		child.SearhForGoal(found, goal,init,level)
+		// Goal founded
 		if *found {
-			break // break when the goal was found
+			fmt.Print("Found!!\n")
+			return true
 		}
+
+		// search for another level if not founded yet
+		if len(n.Children) == 0 {
+			linkName := scraper.StringToWikiUrl(n.Value)
+			links, _ := scraper.Scraper(linkName)
+			n.NewNodeLink(links)
+		}
+
+		// if goal not found yet, go to the next children
+		for _, child := range n.Children {
+			if(level>0){
+				child.SearhForGoal(found, goal, level-1)
+			}
+			if *found {
+				break // break when the goal was found
+			}
+		}
+
 	}
 
 	return *found
