@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
 import { Raleway } from 'next/font/google';
 
 const raleway = Raleway({
@@ -8,12 +7,12 @@ const raleway = Raleway({
   variable: '--font-raleway',
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }) => {
   return (
     <main className={`${raleway.variable} font-sans`}>
       <Component {...pageProps} />
     </main>
-  )
-}
+  );
+};
 
 export default MyApp;

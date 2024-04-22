@@ -4,16 +4,16 @@ import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 import axios from 'axios';
-import Loading from './loading';
+// import Loading from './loading';
 
 const Entry = () => {
     const [startLink, setStartLink] = useState('');
     const [endLink, setEndLink] = useState('');
     const [useToggle, setUseToggle] = useState(false);
-    const [responseData, setResponseData] = useState<any>(null);
+    const [responseData, setResponseData] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
