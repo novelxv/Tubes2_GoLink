@@ -1,8 +1,7 @@
 package tree
 
 import (
-	"fmt"
-
+	"fmt"	
 	"github.com/angiekierra/Tubes2_GoLink/scraper"
 )
 
@@ -39,7 +38,7 @@ func (n *Tree) AddVisitedNode() {
 }
 
 // function to check if the current value is the same with the goal
-func isGoalFound(s1 string, s2 string) bool {
+func IsGoalFound(s1 string, s2 string) bool {
 	return s1 == s2
 }
 
@@ -80,7 +79,7 @@ func (n *Tree) PrintTreeIds() {
 // function to search the word goal recursively in IDS
 func (n *Tree) SearhForGoal(found *bool, goal string, level int) bool {
 	if level>=0 {
-		*found = isGoalFound(n.Value, goal) // check the current value with the goal
+		*found = IsGoalFound(n.Value, goal) // check the current value with the goal
 		fmt.Printf("%s \n", n.Value)
 		n.AddVisitedNode() // make the node visited
 
@@ -114,42 +113,48 @@ func (n *Tree) SearhForGoal(found *bool, goal string, level int) bool {
 
 /* BFS */
 
-// function to print the tree using BFS
-func (n *Tree) PrintTreeBfs() {
-	queue := []*Tree{n}
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		if current.Visited {
-			fmt.Printf("%s", current.Value)
-			queue = append(queue, current.Children...)
-		}
-	}
-	fmt.Println()
-}
+// // function to print the tree using BFS
+// func (n *Tree) PrintTreeBfs() {
+// 	queue := []*Tree{n}
+// 	for len(queue) > 0 {
+// 		current := queue[0]
+// 		queue = queue[1:]
+// 		if current.Visited {
+// 			fmt.Printf("%s", current.Value)
+// 			queue = append(queue, current.Children...)
+// 		}
+// 	}
+// 	fmt.Println()
+// }
 
-// function to search the word goal recursively in BFS
-func (n *Tree) SearhForGoalBfs(goal string) bool {
-	queue := []*Tree{n}
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		current.Visited = true
-		fmt.Printf("%s \n", current.Value)
-		if isGoalFound(current.Value, goal) {
-			fmt.Print("Found!!\n")
-			return true
-		}
+// // function to search the word goal recursively in BFS
+// func (n *Tree) SearhForGoalBfs(goal string, stats *golink.GoLinkStats) bool {
+// 	queue := []*Tree{n}
+// 	for len(queue) > 0 {
+// 		current := queue[0]
+// 		queue = queue[1:]
+// 		if !current.Visited {
+// 			current.Visited = true
+// 			stats.AddTraversed()
+// 		}
+
+// 		fmt.Printf("%s \n", current.Value)
+// 		stats.AddChecked()
 		
-		linkName := scraper.StringToWikiUrl(current.Value)
-		links, _ := scraper.Scraper(linkName)
-		current.NewNodeLink(links)
+// 		if isGoalFound(current.Value, goal) {
+// 			fmt.Print("Found!!\n")
+// 			return true
+// 		}
+		
+// 		linkName := scraper.StringToWikiUrl(current.Value)
+// 		links, _ := scraper.Scraper(linkName)
+// 		current.NewNodeLink(links)
 
-		for _, child := range current.Children {
-			if !child.Visited {
-				queue = append(queue, child)
-			}
-		}
-	}
-	return false
-}
+// 		for _, child := range current.Children {
+// 			if !child.Visited {
+// 				queue = append(queue, child)
+// 			}
+// 		}
+// 	}
+// 	return false
+// }
