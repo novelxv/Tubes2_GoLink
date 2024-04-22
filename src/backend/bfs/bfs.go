@@ -12,14 +12,9 @@ import (
 // main BFS function
 func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 	startTime := time.Now()
-	
-	// wiki link
-	linkName := scraper.StringToWikiUrl(value)
-	links, _ := scraper.Scraper(linkName)
 
 	// save the root
 	root := tree.NewNode(value)
-	root.NewNodeLink(links)
 	stats := golink.NewGoLinkStats(root)
 
 	// use BFS to search for the goal
