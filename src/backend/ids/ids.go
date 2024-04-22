@@ -11,7 +11,6 @@ import (
 // main IDS function
 func Idsfunc(value string, goal string) *tree.Tree {
 	level := 1 // note the current level
-	init := 1 
 	found := false // is the goal alreay found
 
 	// wiki link
@@ -25,7 +24,7 @@ func Idsfunc(value string, goal string) *tree.Tree {
 	// do an iteration per level until the goal was found
 	for !found {
 		fmt.Printf("%d\n", level)
-		root.SearhForGoal(&found, goal, &init, level)
+		root.SearhForGoal(&found, goal, level)
 		level++
 	}
 
