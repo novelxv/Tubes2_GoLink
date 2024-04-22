@@ -64,24 +64,22 @@ func PrintTreeIds(n *tree.Tree) {
 		} else {
 			fmt.Printf(" ()")
 		}
-		fmt.Println()
 	}
 }
 
 // function to search the word goal recursively in IDS
 func SearhForGoal(n *tree.Tree, found *bool, goal string, level int, stats *golink.GoLinkStats) bool {
 	if level>=0 {
-		stats.AddChecked()
+		stats.AddTraversed()
 
 		if !n.Visited {
-			stats.AddTraversed()
+			stats.AddChecked()
 			n.AddVisitedNode()
+			*found = tree.IsGoalFound(n.Value, goal) // check the current value with the goal
 		}
 
-		*found = tree.IsGoalFound(n.Value, goal) // check the current value with the goal
 		fmt.Printf("%s \n", n.Value)
-		// n.AddVisitedNode() // make the node visited
-
+	
 		// Goal founded
 		if *found {
 			fmt.Print("Found!!\n")
