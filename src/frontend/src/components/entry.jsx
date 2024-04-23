@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 import axios from 'axios';
+import Loading from './loading';
+import { data } from 'autoprefixer';
 
 const Entry = () => {
     const [startLink, setStartLink] = useState('');
@@ -26,7 +28,9 @@ const Entry = () => {
                 endLink: endLink,
                 useToggle: useToggle
             });
-            setResponseData(response.data);
+
+            const responseData  = response.data;
+            setResponseData(responseData);
         } catch (error) {
             console.error('Error sending the data', error);
         } finally {
@@ -116,7 +120,7 @@ const Entry = () => {
                                     ))}
                                 </div>
                             </div>
-                            <img src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' />
+                            <Image src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' />
                             <div className='p-5 relative'>
                                 <Input 
                                     ref={endLinkRef}
@@ -153,15 +157,19 @@ const Entry = () => {
                     </div>
                 </form>
                 {loading && (
-                    <div>
-                        <p className='text-neutral-100 text-xl'>Loading...</p>
-                    </div>
+                    <Loading/>
                 )}
                 {responseData && (
                     <div>
-                        <p>Start Link: {responseData.startLink}</p>
-                        <p>End Link: {responseData.endLink}</p>
-                        <p>Use Toggle: {String(responseData.useToggle)}</p>
+                        <p>Total Visited: {String(responseData.articlesVisited)}</p>
+                        <p>Total Searched: {String(responseData.articlesSearched)}</p>
+                        <p>Use Time Needed: {String(responseData.useToggle)}</p>
+                        <h2>Articles:</h2>
+                        <ul>
+                            {responseData.articles.map((article, index) => (
+                                <li key={index}>{article}</li>
+                            ))}
+                        </ul>
                     </div>
                 )}
             </div>
