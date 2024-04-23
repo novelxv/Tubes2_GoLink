@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 import axios from 'axios';
 import Loading from './loading';
-import { data } from 'autoprefixer';
+import ResultWrapper from './results';
 
 const Entry = () => {
     const [startLink, setStartLink] = useState('');
@@ -120,7 +120,7 @@ const Entry = () => {
                                     ))}
                                 </div>
                             </div>
-                            <Image src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' />
+                            <Image src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' width={25} height={25}/>
                             <div className='p-5 relative'>
                                 <Input 
                                     ref={endLinkRef}
@@ -160,17 +160,9 @@ const Entry = () => {
                     <Loading/>
                 )}
                 {responseData && (
-                    <div>
-                        <p>Total Visited: {String(responseData.articlesVisited)}</p>
-                        <p>Total Searched: {String(responseData.articlesSearched)}</p>
-                        <p>Use Time Needed: {String(responseData.useToggle)}</p>
-                        <h2>Articles:</h2>
-                        <ul>
-                            {responseData.articles.map((article, index) => (
-                                <li key={index}>{article}</li>
-                            ))}
-                        </ul>
-                    </div>
+                    <ResultWrapper
+                        responseData={responseData}
+                    />
                 )}
             </div>
         </div>
