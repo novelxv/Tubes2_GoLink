@@ -15,7 +15,7 @@ func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 
 	// save the root
 	root := tree.NewNode(value)
-	stats := golink.NewGoLinkStats(root)
+	stats := golink.NewGoLinkStats()
 
 	// use BFS to search for the goal
 	found := SearhForGoalBfs(root, goal, stats)
@@ -61,6 +61,8 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		
 		if tree.IsGoalFound(current.Value, goal) {
 			fmt.Print("Found!!\n")
+			route := tree.GoalRoute(current)
+			stats.AddRoute(route)
 			return true
 		}
 		

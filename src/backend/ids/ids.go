@@ -24,7 +24,7 @@ func Idsfunc(value string, goal string) *golink.GoLinkStats {
 	// save the root
 	root := tree.NewNode(value)
 	root.NewNodeLink(links)
-	stats := golink.NewGoLinkStats(root)
+	stats := golink.NewGoLinkStats()
 
 	// add the root into the main route
 	root.AddMainRoute()
@@ -89,6 +89,8 @@ func SearhForGoal(n *tree.Tree, found *bool, goal string, level int, stats *goli
 		// Goal founded
 		if *found {
 			n.AddMainRoute() // add the goal into the main route
+			route := tree.GoalRoute(n)
+			stats.AddRoute(route)
 			fmt.Print("Found!!\n")
 			return true
 		}
