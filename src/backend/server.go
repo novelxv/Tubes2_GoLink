@@ -16,9 +16,10 @@ type InputData struct {
 }
 
 type ResponseData struct {
-	StartLink string        `json:"startLink"`
-	EndLink   string        `json:"endLink"`
-	UseToggle bool          `json:"useToggle"`
+	Articles []string      `json:"articles"`
+	ArticlesVisited   int  `json:"articlesVisited"`
+	ArticlesSearched int   `json:"articlesSearched"`
+	TimeNeeded float64		`json:"timeNeeded"`	
 }
 
 // testing
@@ -38,8 +39,7 @@ func main() {
         }
 		
         startLink := input.StartLink
-		endLink := input.EndLink
-		useToggle := input.UseToggle
+		
 		
 		linkName := scraper.StringToWikiUrl(startLink) 
 		links, err := scraper.Scraper(linkName)
@@ -48,10 +48,19 @@ func main() {
 		}
 		scraper.PrintLink(links) 
 		// Send a response back to the frontend
+
+		// testing
+		articlesVisited := 2
+		articlesSearched := 100
+
+		var timeNeeded float64 = 3.14
+		articles := []string{"apple", "banana", "orange", "grape", "melon"}
+
 		c.JSON(200, ResponseData {
-			StartLink: startLink,
-			EndLink:   endLink,
-			UseToggle: useToggle,
+			Articles: articles,
+			ArticlesVisited: articlesVisited,
+			ArticlesSearched: articlesSearched,
+			TimeNeeded: timeNeeded,
 		})
 
 
