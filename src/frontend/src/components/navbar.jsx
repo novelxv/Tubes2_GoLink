@@ -40,7 +40,6 @@ const Navbar = () => {
                             </div>
                         </DrawerContent>
                     </Drawer>
-                    <Link href="/about" className="text-white hover:text-neutral-100 hover:underline">How to Use</Link>
                     <a href="https://github.com/novelxv/Tubes2_GoLink" target="_blank" className="text-white hover:text-neutral-100 hover:underline">Github</a>
                 </div>
             </div>
