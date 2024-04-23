@@ -7,6 +7,7 @@ import (
 type Tree struct {
 	Value    string // the link name
 	Visited  bool   // check whether a node has already been visited or not
+	MainRoute  bool  // main node to the goal
 	Children []*Tree
 }
 
@@ -34,6 +35,16 @@ func (n *Tree) AddChild(child *Tree) {
 // fuunction to make node visited
 func (n *Tree) AddVisitedNode() {
 	n.Visited = true
+}
+
+// fuunction to add node to main route
+func (n *Tree) AddMainRoute() {
+	n.MainRoute = true
+}
+
+// fuunction to remove node from main route
+func (n *Tree) UndoMainRoute() {
+	n.MainRoute = false
 }
 
 // function to check if the current value is the same with the goal
