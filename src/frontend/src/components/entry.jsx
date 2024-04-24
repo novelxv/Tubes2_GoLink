@@ -89,6 +89,17 @@ const Entry = () => {
         setEndLinkSuggestions([]);
     };
 
+    const dummyResponseData = {
+        articlesVisited: 10,
+        articlesSearched: 20,
+        time: 4,
+        articles: [
+            ['https://en.wikipedia.org/wiki/Joko_Widodo_2014_presidential_campaign', 'https://en.wikipedia.org/wiki/Fauzi_Bowo', 'https://en.wikipedia.org/wiki/Javanese_people','https://en.wikipedia.org/wiki/List_of_languages_by_number_of_native_speakers'],
+            ['https://en.wikipedia.org/wiki/Joko_Widodo_2014_presidential_campaign', 'https://en.wikipedia.org/wiki/Historical_capitals_of_China','https://en.wikipedia.org/wiki/List_of_languages_by_number_of_native_speakers'],
+            ['https://en.wikipedia.org/wiki/Joko_Widodo_2014_presidential_campaign', 'https://en.wikipedia.org/wiki/Anyang','https://en.wikipedia.org/wiki/Stone_Age','https://en.wikipedia.org/wiki/Indonesia','https://en.wikipedia.org/wiki/List_of_languages_by_number_of_native_speakers']
+        ]
+    };
+
     return (
         <div className='bg-neutral-800 flex flex-col items-center justify-center min-h-screen relative'>
             <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-5"></div>
@@ -156,14 +167,17 @@ const Entry = () => {
                         <Button type='submit' variant="default" className="hover:translate-y-2 transition-transform duration-300">Search Now</Button>
                     </div>
                 </form>
-                {loading && (
+                {/* {loading && (
                     <Loading/>
-                )}
-                {responseData && (
+                )} */}
+                {/* {responseData && (
                     <ResultWrapper
                         responseData={responseData}
                     />
-                )}
+                )} */}
+                <ResultWrapper
+                    responseData={dummyResponseData}
+                />
             </div>
         </div>
     );
