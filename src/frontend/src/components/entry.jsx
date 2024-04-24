@@ -89,30 +89,30 @@ const Entry = () => {
         setEndLinkSuggestions([]);
     };
 
-    const dummyResponseData = {
-        articlesVisited: 10,
-        articlesSearched: 20,
-        timeNeeded: 4,
-        articles: [
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/Relativy_theory",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
+    // const dummyResponseData = {
+    //     articlesVisited: 10,
+    //     articlesSearched: 20,
+    //     timeNeeded: 4,
+    //     articles: [
+    //         [
+    //           "https://en.wikipedia.org/wiki/Albert_Einstein",
+    //           "https://en.wikipedia.org/wiki/Relativy_theory",
+    //           "https://en.wikipedia.org/wiki/Mathematics",
+    //           "https://en.wikipedia.org/wiki/Calculus",
+    //           "https://en.wikipedia.org/wiki/AI",
+    //           "https://en.wikipedia.org/wiki/AB",
+    //           "https://en.wikipedia.org/wiki/AC",
+    //           "https://en.wikipedia.org/wiki/AD",
+    //         ],
           
-          ]
-    };
+    //       ]
+    // };
 
     return (
-        <div className='bg-neutral-800 flex flex-col items-center justify-center min-h-screen'>
-            {/* <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
+        <div className='bg-neutral-800 flex flex-col items-center justify-center h-full mt-20'>
+            <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
             <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-2"></div>
-            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-3"></div> */}
+            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-3"></div>
             <div className='z-10'>
                 <Image src="/logo.png" alt='logo' width={872} height={165} />
                 <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center font-raleway text-neutral-100 p-7'>
@@ -173,19 +173,16 @@ const Entry = () => {
                     </div>
                     <Button type='submit' variant="default" className="hover:translate-y-2 transition-transform duration-300">Search Now</Button>
                 </form>
+            </div>
+            <div className='z-10'>
                 {loading && (
                     <Loading/>
                 )}
-                {/* {responseData && (
+                {responseData && (
                     <ResultWrapper
                         responseData={responseData}
                     />
-                )} */}
-            </div>
-            <div className='z-10'>
-                {/* <ResultWrapper
-                    responseData={dummyResponseData}
-                /> */}
+                )}
             </div>
         </div>
     );
