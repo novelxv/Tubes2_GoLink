@@ -8,7 +8,8 @@ type Tree struct {
 	Value    string // the link name
 	Visited  bool   // check whether a node has already been visited or not
 	MainRoute  bool  // main node to the goal
-	Children []*Tree
+	Parent 	*Tree // save parent
+	Children []*Tree // save child
 }
 
 // function to make a New Node from string
@@ -29,6 +30,7 @@ func (n *Tree) NewNodeLink(link []scraper.Link) {
 
 // function to add child to the parent
 func (n *Tree) AddChild(child *Tree) {
+	child.Parent = n
 	n.Children = append(n.Children, child)
 }
 
@@ -50,4 +52,18 @@ func (n *Tree) UndoMainRoute() {
 // function to check if the current value is the same with the goal
 func IsGoalFound(s1 string, s2 string) bool {
 	return s1 == s2
+}
+
+func GoalRoute (n *Tree) [] string{
+	if n == nil {
+		return nil
+	}
+	var route []string
+
+	// save route into a list
+	for curr := n; curr != nil; curr = curr.Parent {
+		route = append([]string{curr.Value}, route...)
+	}
+
+	return route
 }
