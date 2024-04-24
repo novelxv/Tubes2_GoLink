@@ -62,7 +62,8 @@ func GoalRoute (n *Tree) [] string{
 
 	// save route into a list
 	for curr := n; curr != nil; curr = curr.Parent {
-		route = append([]string{curr.Value}, route...)
+		linkName := scraper.StringToWikiUrl(curr.Value)
+		route = append([]string{linkName}, route...)
 	}
 
 	return route

@@ -48,20 +48,12 @@ func main() {
 		endLink := input.EndLink
 		toggle := input.UseToggle
 
-		stats := golink.NewGoLinkStats()
+		var stats *golink.GoLinkStats
 
-		if (!toggle){
-			bfsStats := bfs.Bfsfunc(startLink,endLink)
-			stats.Route = bfsStats.Route
-			stats.LinksChecked = bfsStats.LinksChecked
-			stats.LinksTraversed = bfsStats.LinksTraversed
-			stats.Runtime = bfsStats.Runtime
+		if (toggle){
+			stats = bfs.Bfsfunc(startLink,endLink)
 		} else {
-			idsStats := ids.Idsfunc(startLink,endLink)
-			stats.Route = idsStats.Route
-			stats.LinksChecked = idsStats.LinksChecked
-			stats.LinksTraversed = idsStats.LinksTraversed
-			stats.Runtime = idsStats.Runtime
+			stats = ids.Idsfunc(startLink,endLink)
 		}
 		
 		

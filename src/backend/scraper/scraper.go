@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"time"
 	"github.com/gocolly/colly"
 )
 
@@ -38,14 +37,7 @@ func contains(arr []string, str string) bool {
 
 // Link scrapper
 func Scraper(linkName string) ([]Link, error) {
-	c := colly.NewCollector(
-		colly.Async(true),
-	)
-
-	c.Limit(&colly.LimitRule{
-		Parallelism: 2,
-		RandomDelay: 5 * time.Second,
-	})
+	c := colly.NewCollector()
 
 	notUsed := [...]string{
 		"Visit the main page [z]",
