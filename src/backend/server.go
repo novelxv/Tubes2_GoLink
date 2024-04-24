@@ -1,12 +1,17 @@
 package main
 
 import (
+	// "log"
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors" 
-	"github.com/angiekierra/Tubes2_GoLink/scraper"
-	"log"
-	// "fmt"
-	// "net/http"
+
+	"github.com/angiekierra/Tubes2_GoLink/bfs"
+	"github.com/angiekierra/Tubes2_GoLink/golink"
+	"github.com/angiekierra/Tubes2_GoLink/ids"
+	// "github.com/angiekierra/Tubes2_GoLink/scraper"
+	// "github.com/angiekierra/Tubes2_GoLink/tree"
 )
 
 type InputData struct {
@@ -19,7 +24,7 @@ type ResponseData struct {
 	Articles [][]string      `json:"articles"`
 	ArticlesVisited   int  `json:"articlesVisited"`
 	ArticlesSearched int   `json:"articlesSearched"`
-	TimeNeeded float64		`json:"timeNeeded"`	
+	TimeNeeded time.Duration		`json:"timeNeeded"`	
 }
 
 // testing
@@ -38,32 +43,34 @@ func main() {
             return
         }
 		
+		// initialize the inputs
         startLink := input.StartLink
+		endLink := input.EndLink
+		toggle := input.UseToggle
+
+		stats := golink.NewGoLinkStats()
+
+		if (!toggle){
+			bfsStats := bfs.Bfsfunc(startLink,endLink)
+			stats.Route = bfsStats.Route
+			stats.LinksChecked = bfsStats.LinksChecked
+			stats.LinksTraversed = bfsStats.LinksTraversed
+			stats.Runtime = bfsStats.Runtime
+		} else {
+			idsStats := ids.Idsfunc(startLink,endLink)
+			stats.Route = idsStats.Route
+			stats.LinksChecked = idsStats.LinksChecked
+			stats.LinksTraversed = idsStats.LinksTraversed
+			stats.Runtime = idsStats.Runtime
+		}
 		
 		
-		linkName := scraper.StringToWikiUrl(startLink) 
-		links, err := scraper.Scraper(linkName)
-		if err != nil {
-			log.Fatal("Error scraping:", err)
-		}
-		scraper.PrintLink(links) 
-		// Send a response back to the frontend
-
-		// testing
-		articlesVisited := 2
-		articlesSearched := 100
-
-		var timeNeeded float64 = 3.14
-		articles := [][]string{
-			{"apple", "banana", "orange"},
-			{"grape", "melon", ""},
-		}
 
 		c.JSON(200, ResponseData{
-			Articles:          articles,
-			ArticlesVisited:   articlesVisited,
-			ArticlesSearched:  articlesSearched,
-			TimeNeeded:        timeNeeded,
+			Articles:          stats.Route,
+			ArticlesVisited:  stats.LinksChecked,
+			ArticlesSearched:  stats.LinksTraversed,
+			TimeNeeded:        stats.Runtime,
 		})
 
 
