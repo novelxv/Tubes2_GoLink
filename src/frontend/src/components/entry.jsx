@@ -130,7 +130,7 @@ const Entry = () => {
                                 {startLinkSuggestions.map((suggestion, index) => (
                                     <div
                                         key={index}
-                                        className='p-2 cursor-pointer font-raleway text-neutral-800'
+                                        className='p-2 cursor-pointer font-raleway text-neutral-800/50 hover:bg-yellow-400/20 hover:text-neutral-800/70'
                                         onClick={() => handleStartLinkSuggestionClick(suggestion)}
                                     >
                                         {suggestion}
@@ -147,17 +147,17 @@ const Entry = () => {
                                 value={endLink}
                                 onChange={handleEndLinkChange} 
                             />
-                            <div className='absolute top-full bg-white w-72 shadow-md rounded-md'>
-                                {endLinkSuggestions.map((suggestion, index) => (
-                                    <div
-                                        key={index}
-                                        className='p-2 cursor-pointer font-raleway text-neutral-800'
-                                        onClick={() => handleEndLinkSuggestionClick(suggestion)}
-                                    >
-                                        {suggestion}
-                                    </div>
-                                ))}
-                            </div>
+                            <div className='absolute top-full bg-white w-72 shadow-md rounded-md z-10'>
+                                    {endLinkSuggestions.map((suggestion, index) => (
+                                        <div
+                                            key={index}
+                                            className='p-2 cursor-pointer font-raleway text-neutral-800/50 hover:bg-yellow-400/20 hover:text-neutral-800/70'
+                                            onClick={() => handleEndLinkSuggestionClick(suggestion)}
+                                        >
+                                            {suggestion}
+                                        </div>
+                                    ))}
+                                </div>
                         </div>
                     </div>
                     <div className='flex flex-col gap-3'>
