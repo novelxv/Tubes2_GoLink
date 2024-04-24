@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-
+	"time"
 	"github.com/gocolly/colly"
 )
 
@@ -38,7 +38,14 @@ func contains(arr []string, str string) bool {
 
 // Link scrapper
 func Scraper(linkName string) ([]Link, error) {
-	c := colly.NewCollector()
+	c := colly.NewCollector(
+		colly.Async(true),
+	)
+
+	c.Limit(&colly.LimitRule{
+		Parallelism: 2,
+		RandomDelay: 5 * time.Second,
+	})
 
 	notUsed := [...]string{
 		"Visit the main page [z]",
@@ -67,20 +74,17 @@ func Scraper(linkName string) ([]Link, error) {
 	urlPattern := regexp.MustCompile(`^/wiki/..*`)
 
 	// Only selects a element with title attributes
-	c.OnHTML("div#bodycontent", func(bodycontent *colly.HTMLElement) {
+	c.OnHTML("div#mw-content-text a[title]", func(h *colly.HTMLElement) {
+		link := h.Attr("href")
 
-		bodycontent.ForEach("a[title]", func(_ int, a *colly.HTMLElement) {
-			link := a.Attr("href")
-	
-			if urlPattern.MatchString(link) {
-				item := Link{}
-				item.Name = a.Attr("title")
-				if !contains(notUsed[:], item.Name) {
-					item.Url = "https://en.wikipedia.org" + link
-					links = append(links, item)	
-				}
+		if urlPattern.MatchString(link) {
+			item := Link{}
+			item.Name = h.Attr("title")
+			if !contains(notUsed[:], item.Name) {
+				item.Url = "https://en.wikipedia.org" + link
+				links = append(links, item)	
 			}
-		})
+		}
 	})
 
 	// When first requested
