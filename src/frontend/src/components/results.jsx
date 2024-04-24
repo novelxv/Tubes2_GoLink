@@ -47,7 +47,7 @@ const ResultWrapper = ({ responseData }) => {
     return (
         <div className="font-raleway flex flex-col items-center justify-center">
             <div className="text-neutral-100 text-xl border rounded-md p-5 m-7">
-                <p>Found 1 path in <strong>{String(responseData.timeNeeded)} ms </strong>with <strong>{String(responseData.articlesVisited)}</strong> Articles visited and <strong>{String(responseData.articlesSearched)}</strong> Articles searched</p>
+                <p>Found <strong>{String(responseData.articles.length)}</strong> path in <strong>{String(responseData.timeNeeded)} ms </strong>with <strong>{String(responseData.articlesVisited)}</strong> Articles visited and <strong>{String(responseData.articlesSearched)}</strong> Articles searched</p>
             </div>
             {/* <h2>Articles:</h2>
             <div>
