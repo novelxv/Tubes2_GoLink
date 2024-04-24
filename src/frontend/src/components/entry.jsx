@@ -178,7 +178,7 @@ const Entry = () => {
                 {loading && (
                     <Loading/>
                 )}
-                {responseData && (
+                {responseData && !loading && (
                     <ResultWrapper
                         responseData={responseData}
                     />
