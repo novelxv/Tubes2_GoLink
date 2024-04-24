@@ -104,221 +104,90 @@ const Entry = () => {
               "https://en.wikipedia.org/wiki/AC",
               "https://en.wikipedia.org/wiki/AD",
             ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/Memory",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/Other",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Hoho",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/Abednego",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Books",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/nuel",
-              "https://en.wikipedia.org/wiki/Physics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/neo",
-              "https://en.wikipedia.org/wiki/Phsyics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/dabbir",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/asdfasd",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/qprs",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/lmno",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/hijk",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/efgh",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/abcd",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
-            [
-              "https://en.wikipedia.org/wiki/Albert_Einstein",
-              "https://en.wikipedia.org/wiki/hoho",
-              "https://en.wikipedia.org/wiki/Mathematics",
-              "https://en.wikipedia.org/wiki/Calculus",
-              "https://en.wikipedia.org/wiki/AI",
-              "https://en.wikipedia.org/wiki/AB",
-              "https://en.wikipedia.org/wiki/AC",
-              "https://en.wikipedia.org/wiki/AD",
-            ],
           
           ]
     };
 
     return (
-        <div className='bg-neutral-800 flex flex-col items-center justify-center min-h-screen relative'>
-            <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-5"></div>
-            <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-6"></div>
-            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-7"></div>
-            <div className='z-0'>
+        <div className='bg-neutral-800 flex flex-col items-center justify-center min-h-screen'>
+            {/* <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
+            <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-2"></div>
+            <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-3"></div> */}
+            <div className='z-10'>
                 <Image src="/logo.png" alt='logo' width={872} height={165} />
-                <form onSubmit={handleSubmit}>
-                    <div className='flex flex-col items-center justify-center font-raleway text-neutral-100 p-7'>
-                        <p className='flex-auto text-2xl xl:text-3xl'>Find the <b>shortest path</b> from</p>
-                        <div className='flex flex-col xl:flex-row xl:gap-1  items-center' >
-                            <div className='p-5 relative'>
-                                <Input
-                                    ref={startLinkRef}
-                                    className='font-raleway text-neutral-800' 
-                                    placeholder='Start Link'
-                                    value={startLink}
-                                    onChange={handleStartLinkChange} 
-                                />
-                                <div className='absolute top-full bg-white w-72 shadow-md rounded-md z-10'>
-                                    {startLinkSuggestions.map((suggestion, index) => (
-                                        <div
-                                            key={index}
-                                            className='p-2 cursor-pointer font-raleway text-neutral-800/50 hover:bg-yellow-400/20 hover:text-neutral-800/70'
-                                            onClick={() => handleStartLinkSuggestionClick(suggestion)}
-                                        >
-                                            {suggestion}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <Image src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' width={25} height={25}/>
-                            <div className='p-5 relative'>
-                                <Input 
-                                    ref={endLinkRef}
-                                    className='font-raleway text-neutral-800 ' 
-                                    placeholder='End Link'
-                                    value={endLink}
-                                    onChange={handleEndLinkChange} 
-                                />
-                                <div className='absolute top-full bg-white w-72 shadow-md rounded-md z-10'>
-                                    {endLinkSuggestions.map((suggestion, index) => (
-                                        <div
-                                            key={index}
-                                            className='p-2 cursor-pointer font-raleway text-neutral-800/50 hover:bg-yellow-400/20 hover:text-neutral-800/70'
-                                            onClick={() => handleEndLinkSuggestionClick(suggestion)}
-                                        >
-                                            {suggestion}
-                                        </div>
-                                    ))}
-                                </div>
+                <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center font-raleway text-neutral-100 p-7'>
+                    <p className='flex-auto text-2xl xl:text-3xl'>Find the <b>shortest path</b> from</p>
+                    <div className='flex flex-col xl:flex-row xl:gap-1 items-center' >
+                        <div className='p-5 relative'>
+                            <Input
+                                ref={startLinkRef}
+                                className='font-raleway text-neutral-800' 
+                                placeholder='Start Link'
+                                value={startLink}
+                                onChange={handleStartLinkChange} 
+                            />
+                            <div className='absolute top-full bg-white w-72 shadow-md rounded-md'>
+                                {startLinkSuggestions.map((suggestion, index) => (
+                                    <div
+                                        key={index}
+                                        className='p-2 cursor-pointer font-raleway text-neutral-800'
+                                        onClick={() => handleStartLinkSuggestionClick(suggestion)}
+                                    >
+                                        {suggestion}
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <div className='flex flex-col gap-3'>
-                            <p className='text-center text-xl'>using</p>
-                            <div className="flex flex-row gap-3 pb-5">
-                                <p className="text-neutral-100 text-lg"><b>IDS</b></p>
-                                <Switch
-                                    checked={useToggle}
-                                    onCheckedChange={handleSwitchChange}
-                                />
-                                <p className="text-neutral-100 text-lg"><b>BFS</b></p>
+                        <Image src="/switch.svg" alt="switch" onClick={switchText} className='hover:animate-pulse' width={25} height={25}/>
+                        <div className='p-5 relative'>
+                            <Input 
+                                ref={endLinkRef}
+                                className='font-raleway text-neutral-800' 
+                                placeholder='End Link'
+                                value={endLink}
+                                onChange={handleEndLinkChange} 
+                            />
+                            <div className='absolute top-full bg-white w-72 shadow-md rounded-md'>
+                                {endLinkSuggestions.map((suggestion, index) => (
+                                    <div
+                                        key={index}
+                                        className='p-2 cursor-pointer font-raleway text-neutral-800'
+                                        onClick={() => handleEndLinkSuggestionClick(suggestion)}
+                                    >
+                                        {suggestion}
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                        <Button type='submit' variant="default" className="hover:translate-y-2 transition-transform duration-300">Search Now</Button>
                     </div>
+                    <div className='flex flex-col gap-3'>
+                        <p className='text-center text-xl'>using</p>
+                        <div className="flex flex-row gap-3 pb-5">
+                            <p className="text-neutral-100 text-lg"><b>IDS</b></p>
+                            <Switch
+                                checked={useToggle}
+                                onCheckedChange={handleSwitchChange}
+                            />
+                            <p className="text-neutral-100 text-lg"><b>BFS</b></p>
+                        </div>
+                    </div>
+                    <Button type='submit' variant="default" className="hover:translate-y-2 transition-transform duration-300">Search Now</Button>
                 </form>
-                {/* {loading && (
+                {loading && (
                     <Loading/>
-                )} */}
+                )}
                 {/* {responseData && (
                     <ResultWrapper
                         responseData={responseData}
                     />
                 )} */}
-                <ResultWrapper
+            </div>
+            <div className='z-10'>
+                {/* <ResultWrapper
                     responseData={dummyResponseData}
-                />
+                /> */}
             </div>
         </div>
     );
 };
-
 export default Entry;

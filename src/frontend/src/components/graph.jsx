@@ -8,7 +8,7 @@ const Graph = ({node,link}) => {
         const data = { nodes: node, links: link };
 
 
-        const width = 800;
+        const width = 1000;
         const height = 800;
 
 
@@ -63,12 +63,12 @@ const Graph = ({node,link}) => {
         // Color per level
         const colorScale = d3.scaleOrdinal()
             .domain(data.nodes.map(node => node.level))
-            .range(['#6027CC', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
+            .range(['#9060ff', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
 
 
         const svg = d3.select(svgRef.current)
         .attr('width', width)
-        .attr('height', height);
+        .attr('height', height);    
 
         // Split links
         function formatWikipediaUrl(url) {
@@ -84,7 +84,6 @@ const Graph = ({node,link}) => {
             }
             console.log(url)
         }
-        
 
         // Draw links
         svg.selectAll('line')

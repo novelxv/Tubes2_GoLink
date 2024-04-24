@@ -45,11 +45,11 @@ const ResultWrapper = ({ responseData }) => {
   
 
     return (
-        <div>
-            <p>Total Visited: {String(responseData.articlesVisited)}</p>
-            <p>Total Searched: {String(responseData.articlesSearched)}</p>
-            <p>Time Needed: {String(responseData.timeNeeded)}</p>
-            <h2>Articles:</h2>
+        <div className="font-raleway flex flex-col items-center justify-center">
+            <div className="text-neutral-100 text-xl border rounded-md p-5 m-7">
+                <p>Found 1 path in <strong>{String(responseData.timeNeeded)} ms </strong>with <strong>{String(responseData.articlesVisited)}</strong> Articles visited and <strong>{String(responseData.articlesSearched)}</strong> Articles searched</p>
+            </div>
+            {/* <h2>Articles:</h2>
             <div>
                 <h2>Nodes:</h2>
                 <ul>
@@ -63,8 +63,8 @@ const ResultWrapper = ({ responseData }) => {
                         <li key={index}>Source: {link.source}, Target: {link.target}</li>
                     ))}
                 </ul>
-            </div>
-            <div>
+            </div> */}
+            <div className="bg-neutral-100 rounded-md flex items-center justify-center">
                 <Graph node={nodes} link={links} />
             </div>
         </div>
