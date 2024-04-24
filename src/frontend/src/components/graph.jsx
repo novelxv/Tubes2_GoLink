@@ -9,9 +9,56 @@ const Graph = ({node,link}) => {
 
 
         const width = 1000;
-        const height = 800;
+        const height = 700;
+
+
+        const countNodesPerLevel = (nodes) => {
+            const maxLevel = Math.max(...nodes.map(node => node.level));
+            
+            const nodesPerLevel = Array.from({ length: maxLevel + 1 }, () => 0);
+            
+            nodes.forEach(node => {
+                nodesPerLevel[node.level]++;
+            });
+        
+            return nodesPerLevel;
+        };
+    
+        
+        const calculateXPositions = (numElementsPerLevel, width) => {
+            const matrix = [];
+            for (let i = 0; i < numElementsPerLevel.length; i++) {
+                const positions = [];
+                const nodeWidth = width / (numElementsPerLevel[i] + 1);
+                for (let j = 0; j < numElementsPerLevel[i]; j++) {
+                    positions.push(nodeWidth * (j + 1));
+                }
+                matrix.push(positions);
+            }
+            return matrix;
+        };
+
+
 
         
+        const nodesPerLevel = countNodesPerLevel(node);
+        const positionsMatrix = calculateXPositions(nodesPerLevel, width);
+        
+        const updateNodeXPositions = (nodes, positionsMatrix) => {
+            // Update x positions for each node
+            nodes.forEach(node => {
+                const positions = positionsMatrix[node.level];
+                if (positions && positions.length > 0) {
+                    // Set x position to the first position in the array
+                    node.x = positions[0];
+                    // Remove the first position from the array
+                    positions.splice(0, 1);
+                }
+            });
+        };
+
+       
+        updateNodeXPositions(node,positionsMatrix);
         // Main color
         const startColor = '#FB7185' // rose-400
         const endColor = '#1CD0A1' // emerald-400
@@ -19,13 +66,16 @@ const Graph = ({node,link}) => {
         // Color per level
         const colorScale = d3.scaleOrdinal()
             .domain(data.nodes.map(node => node.level))
-            .range(['#9060ff', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
+            .range(['#6027CC', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
 
 
         const svg = d3.select(svgRef.current)
         .attr('width', width)
-        .attr('height', height);    
+        .attr('height', height)
+        .style('background-color', '#f2f2f2')
+        .style('border-radius','15px');
 
+        
         // Split links
         function formatWikipediaUrl(url) {
             const lastSegment = url.split('/').pop();
@@ -40,6 +90,7 @@ const Graph = ({node,link}) => {
             }
             console.log(url)
         }
+        
 
         // Draw links
         svg.selectAll('line')
@@ -79,6 +130,7 @@ const Graph = ({node,link}) => {
             .attr('x', d => d.x)
             .attr('y', d => d.y + 3)
             .attr('text-anchor', 'middle')
+            .style('font-size', '12px')
             .text(d => formatWikipediaUrl(d.url))
             .on("click", (event, d) => {handleClick(d)});
 

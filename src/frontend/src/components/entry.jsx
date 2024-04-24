@@ -97,12 +97,12 @@ const Entry = () => {
     //         [
     //           "https://en.wikipedia.org/wiki/Albert_Einstein",
     //           "https://en.wikipedia.org/wiki/Relativy_theory",
-    //           "https://en.wikipedia.org/wiki/Mathematics",
-    //           "https://en.wikipedia.org/wiki/Calculus",
-    //           "https://en.wikipedia.org/wiki/AI",
-    //           "https://en.wikipedia.org/wiki/AB",
-    //           "https://en.wikipedia.org/wiki/AC",
-    //           "https://en.wikipedia.org/wiki/AD",
+    //         //   "https://en.wikipedia.org/wiki/Mathematics",
+    //         //   "https://en.wikipedia.org/wiki/Calculus",
+    //         //   "https://en.wikipedia.org/wiki/AI",
+    //         //   "https://en.wikipedia.org/wiki/AB",
+    //         //   "https://en.wikipedia.org/wiki/AC",
+    //         //   "https://en.wikipedia.org/wiki/AD",
     //         ],
           
     //       ]
