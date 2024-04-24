@@ -16,7 +16,7 @@ type InputData struct {
 }
 
 type ResponseData struct {
-	Articles []string      `json:"articles"`
+	Articles [][]string      `json:"articles"`
 	ArticlesVisited   int  `json:"articlesVisited"`
 	ArticlesSearched int   `json:"articlesSearched"`
 	TimeNeeded float64		`json:"timeNeeded"`	
@@ -54,13 +54,16 @@ func main() {
 		articlesSearched := 100
 
 		var timeNeeded float64 = 3.14
-		articles := []string{"apple", "banana", "orange", "grape", "melon"}
+		articles := [][]string{
+			{"apple", "banana", "orange"},
+			{"grape", "melon", ""},
+		}
 
-		c.JSON(200, ResponseData {
-			Articles: articles,
-			ArticlesVisited: articlesVisited,
-			ArticlesSearched: articlesSearched,
-			TimeNeeded: timeNeeded,
+		c.JSON(200, ResponseData{
+			Articles:          articles,
+			ArticlesVisited:   articlesVisited,
+			ArticlesSearched:  articlesSearched,
+			TimeNeeded:        timeNeeded,
 		})
 
 
