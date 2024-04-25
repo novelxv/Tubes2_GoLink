@@ -3,6 +3,8 @@ package bfs
 import (	
 	"fmt"
 	"time"
+	"sync"
+	"context"
 	"github.com/angiekierra/Tubes2_GoLink/scraper"
 	"github.com/angiekierra/Tubes2_GoLink/tree"
 	"github.com/angiekierra/Tubes2_GoLink/golink"
@@ -18,14 +20,15 @@ func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 	stats := golink.NewGoLinkStats()
 
 	// use BFS to search for the goal
-	found := SearhForGoalBfs(root, goal, stats)
+	found := SearchForGoalBfsMT(root, goal, stats)
 
 	elapsedTime := time.Since(startTime)
 	stats.SetRuntime(elapsedTime)
 
 	if found {
-		PrintTreeBfs(root)
 		stats.PrintStats()
+		// PrintTreeBfs(root)
+		// stats.PrintStats()
 	}
 
 	return stats
@@ -45,7 +48,7 @@ func PrintTreeBfs(n *tree.Tree) {
 	fmt.Println()
 }
 
-// function to search the word goal recursively in BFS
+// function to search the word goal with BFS
 func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	queue := []*tree.Tree{n}
 	for len(queue) > 0 {
@@ -77,4 +80,58 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		}
 	}
 	return false
+}
+
+func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	var wg sync.WaitGroup
+	nodeQueue := make(chan *tree.Tree, 10) 
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		nodeQueue <- root
+	}()
+
+	go func() {
+		defer close(nodeQueue) // Ensure channel is closed when all processing is done
+		for node := range nodeQueue {
+			if node.Visited {
+				continue
+			}
+
+			node.Visited = true
+			stats.AddTraversed()
+
+			if tree.IsGoalFound(node.Value, goal) {
+				fmt.Println("Found!!")
+				route := tree.GoalRoute(node)
+				stats.AddRoute(route)
+				cancel() // Notify to cancel all operations
+				return
+			}
+
+			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
+			for _, link := range links {
+				child := tree.NewNode(link.Name)
+				node.AddChild(child)
+				if !child.Visited {
+					wg.Add(1)
+					go func(ch *tree.Tree) {
+						defer wg.Done()
+						select {
+						case nodeQueue <- ch:
+						case <-ctx.Done(): // Handle cancellation
+						}
+					}(child)
+				}
+			}
+		}
+	}()
+
+	wg.Wait() // Wait for all goroutines to complete before finishing
+	<-ctx.Done() // Ensure context is canceled
+	return ctx.Err() == context.Canceled
 }
