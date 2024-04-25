@@ -3,10 +3,7 @@ import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
-import { AlertCircle } from "lucide-react"
- 
-import { Alert, AlertDescription, AlertTitle,
-} from "@/components/ui/alert"
+import { useToast } from './ui/use-toast';
 import axios from 'axios';
 import Loading from './loading';
 import ResultWrapper from './results';
@@ -22,13 +19,20 @@ const Entry = () => {
     const [endLinkSuggestions, setEndLinkSuggestions] = useState([]);
     const endLinkRef = useRef(null);
     const startLinkRef = useRef(null);
+    const { toast } = useToast()
+
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!startLink || !endLink) {
-            // Display toast component or handle empty link scenario
-            console.log("Start Link or End Link is empty. Please fill both fields.");
+            toast({
+                title: "Oh, no! Your input is Blank",
+                description: "Start Article or End Article is empty. Please fill both fields.",
+                variant : "destructive"
+                })
+            console.log("Start Article or End Article is empty. Please fill both fields.");
             return;
         }
 
@@ -43,6 +47,11 @@ const Entry = () => {
             const responseData  = response.data;
             setResponseData(responseData);
         } catch (error) {
+            toast({
+                title: "Oh, no! There is something wrong",
+                description: "There was a problem with your request",
+                variant : "destructive"
+                })
             console.error('Error sending the data', error);
         } finally {
             setLoading(false);
@@ -133,7 +142,7 @@ const Entry = () => {
                             <Input
                                 ref={startLinkRef}
                                 className='font-raleway text-neutral-800' 
-                                placeholder='Start Link'
+                                placeholder='Start Article'
                                 value={startLink}
                                 onChange={handleStartLinkChange} 
                             />
@@ -154,7 +163,7 @@ const Entry = () => {
                             <Input 
                                 ref={endLinkRef}
                                 className='font-raleway text-neutral-800' 
-                                placeholder='End Link'
+                                placeholder='End Article'
                                 value={endLink}
                                 onChange={handleEndLinkChange} 
                             />
@@ -189,10 +198,8 @@ const Entry = () => {
                 {loading && (
                     <Loading/>
                 )}
-                {responseData && !loading && (
-                    <ResultWrapper
-                        responseData={responseData}
-                    />
+                {responseData && !loading  (
+                    <ResultWrapper responseData={responseData}/>
                 )}
             </div>
         </div>
