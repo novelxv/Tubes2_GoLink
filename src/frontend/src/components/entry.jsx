@@ -3,6 +3,10 @@ import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
+import { AlertCircle } from "lucide-react"
+ 
+import { Alert, AlertDescription, AlertTitle,
+} from "@/components/ui/alert"
 import axios from 'axios';
 import Loading from './loading';
 import ResultWrapper from './results';
@@ -21,6 +25,13 @@ const Entry = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!startLink || !endLink) {
+            // Display toast component or handle empty link scenario
+            console.log("Start Link or End Link is empty. Please fill both fields.");
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/api/input', {

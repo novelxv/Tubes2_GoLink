@@ -3,7 +3,7 @@ package main
 import (
 	// "log"
 	"time"
-
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
@@ -43,11 +43,14 @@ func main() {
             return
         }
 		
-		// initialize the inputs
+		//initialize the inputs
         startLink := input.StartLink
 		endLink := input.EndLink
 		toggle := input.UseToggle
 
+		fmt.Println(startLink)
+		fmt.Println(endLink)
+		fmt.Println(endLink)
 		var stats *golink.GoLinkStats
 
 		if (toggle){

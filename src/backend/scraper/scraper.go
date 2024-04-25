@@ -59,17 +59,20 @@ func Scraper(linkName string) ([]Link, error) {
 		"Recent changes in pages linked from this page [k]",
 		"Upload files [u]",
 		"A list of all special pages [q]",
+
 	}
 
 	var links []Link
 
 	urlPattern := regexp.MustCompile(`^/wiki/..*`)
+	avoid := regexp.MustCompile(`^/wiki/(Special:|Talk:|User:|Portal:|Wikipedia:|File:|Category:|Help:|Template:|Template_talk:).*`)
+
 
 	// Only selects a element with title attributes
 	c.OnHTML("div#mw-content-text a[title]", func(h *colly.HTMLElement) {
 		link := h.Attr("href")
 
-		if urlPattern.MatchString(link) {
+		if (urlPattern.MatchString(link) && !avoid.MatchString(link)) {
 			item := Link{}
 			item.Name = h.Attr("title")
 			if !contains(notUsed[:], item.Name) {
