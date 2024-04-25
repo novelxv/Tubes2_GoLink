@@ -2,7 +2,7 @@ package main
 
 import (
 	// "log"
-	"time"
+	// "time"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -24,7 +24,7 @@ type ResponseData struct {
 	Articles [][]string      `json:"articles"`
 	ArticlesVisited   int  `json:"articlesVisited"`
 	ArticlesSearched int   `json:"articlesSearched"`
-	TimeNeeded time.Duration		`json:"timeNeeded"`	
+	TimeNeeded int64		`json:"timeNeeded"`	
 }
 
 // testing
@@ -60,12 +60,14 @@ func main() {
 		}
 		
 		
-
+		runTime := stats.Runtime.Milliseconds()
+		fmt.Println("Runtime:",runTime)
+		stats.PrintStats()
 		c.JSON(200, ResponseData{
 			Articles:          stats.Route,
 			ArticlesVisited:  stats.LinksChecked,
 			ArticlesSearched:  stats.LinksTraversed,
-			TimeNeeded:        stats.Runtime,
+			TimeNeeded:        runTime,
 		})
 
 
