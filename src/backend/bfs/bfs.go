@@ -114,13 +114,28 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 			}
 
 			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
+
+			const maxGoroutines = 500 
+			sem := make(chan bool, maxGoroutines)
+
+			visitedNodes := make(map[string]*tree.Tree)
+
 			for _, link := range links {
+				if visitedNodes[link.Name] != nil {
+					continue
+				}
 				child := tree.NewNode(link.Name)
 				node.AddChild(child)
+				visitedNodes[link.Name] = child
+
 				if !child.Visited {
 					wg.Add(1)
 					go func(ch *tree.Tree) {
-						defer wg.Done()
+						sem <- true
+						defer func() {
+							<-sem
+							wg.Done()
+						}()
 						select {
 						case nodeQueue <- ch:
 						case <-ctx.Done(): // Handle cancellation
