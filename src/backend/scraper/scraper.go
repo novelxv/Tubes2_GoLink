@@ -25,42 +25,11 @@ func StringToWikiUrl(name string) string {
 	return url
 }
 
-// link title containing on unused title
-func contains(arr []string, str string) bool {
-	for _, a := range arr {
-		if a == str {
-			return true
-		}
-	}
-	return false
-}
 
 // Link scrapper
 func Scraper(linkName string) ([]Link, error) {
 	c := colly.NewCollector()
 
-	notUsed := [...]string{
-		"Visit the main page [z]",
-		"Guides to browsing Wikipedia",
-		"Articles related to current events",
-		"Visit a randomly selected article [x]",
-		"Learn about Wikipedia and how it works",
-		"Guidance on how to use and edit Wikipedia",
-		"Learn how to edit Wikipedia",
-		"The hub for editors",
-		"A list of recent changes to Wikipedia [r]",
-		"Add images or other media for use on Wikipedia",
-		"Search Wikipedia [f]",
-		"A list of edits made from this IP address [y]",
-		"Discussion about edits from this IP address [n]",
-		"View the content page [c]",
-		"Discuss improvements to the content page [t]",
-		"List of all English Wikipedia pages containing links to this page [j]",
-		"Recent changes in pages linked from this page [k]",
-		"Upload files [u]",
-		"A list of all special pages [q]",
-
-	}
 
 	var links []Link
 
@@ -75,10 +44,8 @@ func Scraper(linkName string) ([]Link, error) {
 		if (urlPattern.MatchString(link) && !avoid.MatchString(link)) {
 			item := Link{}
 			item.Name = h.Attr("title")
-			if !contains(notUsed[:], item.Name) {
-				item.Url = "https://en.wikipedia.org" + link
-				links = append(links, item)	
-			}
+			links = append(links, item)	
+			
 		}
 	})
 
@@ -88,14 +55,14 @@ func Scraper(linkName string) ([]Link, error) {
     })
 
 	// When received a response
-    c.OnResponse(func(r *colly.Response) {
-        fmt.Println("Got a response from", r.Request.URL)
-    })
+    // c.OnResponse(func(r *colly.Response) {
+    //     fmt.Println("Got a response from", r.Request.URL)
+    // })
 
-	// When encountering an error
-    c.OnError(func(r *colly.Response, e error) {
-        fmt.Println("Error:", e)
-    })
+	// // When encountering an error
+    // c.OnError(func(r *colly.Response, e error) {
+    //     fmt.Println("Error:", e)
+    // })
 
 	// Visiting the link and scraping
     err := c.Visit(linkName)
