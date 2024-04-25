@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync/atomic"
 	"github.com/gocolly/colly"
 )
 
@@ -104,4 +105,57 @@ func Scraper(linkName string) ([]Link, error) {
     }
 
     return links, nil
+}
+
+var shouldContinue int32 = 1 // Atomic flag
+// Scrapper with cancellation
+func Scraper2(linkName string) ([]Link, error) {
+    c := colly.NewCollector(
+        colly.Async(true), // Enable asynchronous request
+    )
+    
+    var links []Link
+    urlPattern := regexp.MustCompile(`^/wiki/..*`)
+    avoid := regexp.MustCompile(`^/wiki/(Special:|Talk:|User:|Portal:|Wikipedia:|File:|Category:|Help:|Template:|Template_talk:).*`)
+
+    c.OnHTML("div#mw-content-text a[title]", func(h *colly.HTMLElement) {
+        if atomic.LoadInt32(&shouldContinue) == 0 {
+            return // Skip processing if cancellation flag is set
+        }
+        link := h.Attr("href")
+        if urlPattern.MatchString(link) && !avoid.MatchString(link) {
+            links = append(links, Link{
+                Name: h.Attr("title"),
+                Url:  "https://en.wikipedia.org" + link,
+            })
+        }
+    })
+
+    c.OnRequest(func(r *colly.Request) {
+        fmt.Println("Visiting", r.URL.String())
+        if atomic.LoadInt32(&shouldContinue) == 0 {
+            r.Abort() // Abort the request if cancellation flag is set
+        }
+    })
+
+    c.OnResponse(func(r *colly.Response) {
+        fmt.Println("Got a response from", r.Request.URL.String())
+    })
+
+    c.OnError(func(r *colly.Response, e error) {
+        fmt.Println("Error:", e)
+    })
+
+    err := c.Visit(linkName)
+    if err != nil {
+        return nil, err
+    }
+
+    c.Wait() // Wait for all jobs to finish
+
+    return links, nil
+}
+
+func CancelScraping() {
+    atomic.StoreInt32(&shouldContinue, 0) // Set flag to 0 to indicate stopping
 }
