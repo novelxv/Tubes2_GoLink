@@ -3,7 +3,7 @@ package bfs
 import (	
 	"fmt"
 	"time"
-	"context"
+	// "context"
 	"sync"
 	"github.com/angiekierra/Tubes2_GoLink/scraper"
 	"github.com/angiekierra/Tubes2_GoLink/tree"
@@ -83,85 +83,144 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 }
 
 // searchForGoalBfsMT handles the BFS using goroutines
-
 func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
-	start := time.Now() // delete
-    ctx, cancel := context.WithCancel(context.Background())
-    defer cancel() // Ensure cancellation signal is sent when function exits
+	var wg sync.WaitGroup
+	nodeQueue := make(chan *tree.Tree)
+	results := make(chan bool)
+	done := make(chan struct{})
 
-    queue := make(chan *tree.Tree, 100)
-    done := make(chan bool)
-    var wg sync.WaitGroup
+	go func() {
+		nodeQueue <- root
+	}()
 
-    queue <- root
-    wg.Add(1)
+	wg.Add(1)
+	go func() {
+		defer close(nodeQueue)
+		for node := range nodeQueue {
+			if node.Visited {
+				wg.Done()
+				continue
+			}
 
-    for i := 0; i < 20; i++ { // Start 20 workers
-        go func() {
-            defer wg.Done()
-            for {
-                select {
-                case n, ok := <-queue:
-                    if !ok {
-                        return // Channel is closed, exit goroutine
-                    }
-                    if n.Visited {
-                        continue
-                    }
+			node.Visited = true
+			stats.AddTraversed()
 
-                    n.Visited = true
-                    stats.AddTraversed()
+			if tree.IsGoalFound(node.Value, goal) {
+				fmt.Println("Found!!")
+				route := tree.GoalRoute(node)
+				stats.AddRoute(route)
+				results <- true
+				close(done)
+				return
+			}
 
-                    if tree.IsGoalFound(n.Value, goal) {
-						elapsed := time.Since(start) // delete
-                        fmt.Print("Found!!\n")
-						fmt.Printf("Runtime: %v\n", elapsed) // delete
-                        route := tree.GoalRoute(n)
-                        stats.AddRoute(route)
-                        stats.AddChecked()
-                        stats.PrintStats()
-                        cancel() // Use cancel function to signal all goroutines to stop
-                        done <- true
-                        return
-                    }
+			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
+			for _, link := range links {
+				child := tree.NewNode(link.Name)
+				node.AddChild(child)
+				if !child.Visited {
+					wg.Add(1)
+					go func(ch *tree.Tree) {
+						nodeQueue <- ch
+						wg.Done()
+					}(child)
+				}
+			}
+			wg.Done()
+		}
+	}()
 
-                    linkName := scraper.StringToWikiUrl(n.Value)
-                    links, err := scraper.Scraper2(linkName)
-                    if err != nil {
-                        fmt.Printf("Error scraping %s: %v\n", linkName, err)
-                        continue
-                    }
-                    n.NewNodeLink(links)
+	go func() {
+		wg.Wait()
+		results <- false
+	}()
 
-                    for _, child := range n.Children {
-                        if !child.Visited {
-                            wg.Add(1)
-                            go func(ch *tree.Tree) {
-                                select {
-                                case queue <- ch:
-                                case <-ctx.Done():
-                                    return // Stop sending if the context is cancelled
-                                }
-                            }(child)
-                        }
-                    }
-                case <-ctx.Done():
-                    return // Exit goroutine when context is cancelled
-                }
-            }
-        }()
-    }
-
-    wg.Wait() // Wait for all goroutines to complete
-    close(queue) // Close the channel after all goroutines are done
-    select {
-    case <-done:
-        return true
-    default:
-        fmt.Println("Search cancelled or goal found.")
-        return false
-    }
+	select {
+	case found := <-results:
+		return found
+	case <-done:
+		return true
+	}
 }
+
+// func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+// 	start := time.Now() // delete
+//     ctx, cancel := context.WithCancel(context.Background())
+//     defer cancel() // Ensure cancellation signal is sent when function exits
+
+//     queue := make(chan *tree.Tree, 100)
+//     done := make(chan bool)
+//     var wg sync.WaitGroup
+
+//     queue <- root
+//     wg.Add(1)
+
+//     for i := 0; i < 20; i++ { // Start 20 workers
+//         go func() {
+//             defer wg.Done()
+//             for {
+//                 select {
+//                 case n, ok := <-queue:
+//                     if !ok {
+//                         return // Channel is closed, exit goroutine
+//                     }
+//                     if n.Visited {
+//                         continue
+//                     }
+
+//                     n.Visited = true
+//                     stats.AddTraversed()
+
+//                     if tree.IsGoalFound(n.Value, goal) {
+// 						elapsed := time.Since(start) // delete
+//                         fmt.Print("Found!!\n")
+// 						fmt.Printf("Runtime: %v\n", elapsed) // delete
+//                         route := tree.GoalRoute(n)
+//                         stats.AddRoute(route)
+//                         stats.AddChecked()
+//                         stats.PrintStats()
+//                         cancel() // Use cancel function to signal all goroutines to stop
+//                         done <- true
+//                         return
+//                     }
+
+//                     linkName := scraper.StringToWikiUrl(n.Value)
+//                     links, err := scraper.Scraper2(linkName)
+//                     if err != nil {
+//                         fmt.Printf("Error scraping %s: %v\n", linkName, err)
+//                         continue
+//                     }
+//                     n.NewNodeLink(links)
+
+//                     for _, child := range n.Children {
+//                         if !child.Visited {
+//                             wg.Add(1)
+//                             go func(ch *tree.Tree) {
+//                                 select {
+//                                 case queue <- ch:
+//                                 case <-ctx.Done():
+//                                     return // Stop sending if the context is cancelled
+//                                 }
+//                             }(child)
+//                         }
+//                     }
+//                 case <-ctx.Done():
+//                     return // Exit goroutine when context is cancelled
+//                 }
+//             }
+//         }()
+//     }
+
+//     wg.Wait() // Wait for all goroutines to complete
+//     close(queue) // Close the channel after all goroutines are done
+//     select {
+//     case <-done:
+//         return true
+//     default:
+//         fmt.Println("Search cancelled or goal found.")
+//         return false
+//     }
+// }
 
 
 // func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
