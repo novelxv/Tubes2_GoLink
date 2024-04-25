@@ -3,6 +3,7 @@ package golink
 import (
 	"fmt"
 	"time"
+	"reflect"
 )
 
 // fungsi untuk menyimpan statistik pencarian link Wiki
@@ -35,12 +36,27 @@ func (g *GoLinkStats) AddChecked() {
 
 // fungsi buat menambahkan rute
 func (g *GoLinkStats) AddRoute(rute []string) {
-	g.Route = append(g.Route, rute)
+	if(!SameList(g.Route,rute)){
+		g.Route = append(g.Route, rute)
+		g.LinksTraversed = len(rute)
+	}
+	
 }
 
 // fungsi untuk mengatur runtime pencarian
 func (g *GoLinkStats) SetRuntime(duration time.Duration) {
 	g.Runtime = duration
+}
+
+func SameList(listOfLists [][]string, checkList []string) bool {
+	// Iterasi melalui setiap list di Route
+	for _, list := range listOfLists {
+		// Memeriksa apakah list sudah ada di dalam Route
+		if reflect.DeepEqual(list, checkList) {
+			return true
+		}
+	}
+	return false
 }
 
 // fungsi untuk mencetak statistik pencarian
