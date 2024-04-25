@@ -129,7 +129,7 @@ const Entry = () => {
     // };
 
     return (
-        <div className='bg-neutral-800 flex flex-col items-center justify-center h-full mt-20'>
+        <div className='bg-neutral-800 flex flex-col items-center justify-center h-full mt-20 pt-10'>
             <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>
             <div className="absolute top-1/4 right-1/4 w-[600px] h-[363px] bg-violet-700 rounded-full blur-[150px] -z-2"></div>
             <div className="absolute top-1/2 right-1/2 w-[469px] h-[363px] bg-rose-400 rounded-full blur-[200px] -z-3"></div>
@@ -198,7 +198,7 @@ const Entry = () => {
                 {loading && (
                     <Loading/>
                 )}
-                {responseData && !loading  (
+                {responseData && !loading &&  (
                     <ResultWrapper responseData={responseData}/>
                 )}
             </div>

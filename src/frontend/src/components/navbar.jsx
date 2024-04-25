@@ -10,7 +10,7 @@ const Navbar = () => {
                 <div className="flex space-x-4">
                     <Drawer>
                         <DrawerTrigger asChild>
-                            <Link href="/" className="text-white hover:text-neutral-100 hover:underline">Author</Link>
+                            <Link href="/" className="font-medium  text-lg text-white hover:text-neutral-100 hover:underline">Author</Link>
                         </DrawerTrigger>
                         <DrawerContent>
                             <div className='font-raleway text-neutral-800'>
@@ -40,7 +40,8 @@ const Navbar = () => {
                             </div>
                         </DrawerContent>
                     </Drawer>
-                    <a href="https://github.com/novelxv/Tubes2_GoLink" target="_blank" className="text-white hover:text-neutral-100 hover:underline">Github</a>
+                    <p className="font-medium  text-lg text-white hover:text-neutral-100">|</p>
+                    <a href="https://github.com/novelxv/Tubes2_GoLink" target="_blank" className="font-medium  text-lg text-white hover:text-neutral-100 hover:underline">Github</a>
                 </div>
             </div>
         </nav>

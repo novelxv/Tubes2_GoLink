@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Raleway } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
+import ParticlesComponent from "@/components/particles";
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -11,6 +12,7 @@ const raleway = Raleway({
 const MyApp = ({ Component, pageProps }) => {
   return (
     <main className={`${raleway.variable} font-sans`}>
+      <ParticlesComponent/>
       <Toaster/>
       <Component {...pageProps} />
     </main>
