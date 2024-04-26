@@ -85,7 +85,8 @@ func PrintTreeIds(n *tree.Tree) {
 // function to search the word goal recursively in IDS
 // function to search the word goal recursively in IDS
 func SearchForGoal(node *tree.Tree, goal string, currentLevel int, stats *golink.GoLinkStats) {
-	if currentLevel < 0 || found {
+	
+	if currentLevel < 0 {
 		return
 	}
 
@@ -107,7 +108,7 @@ func SearchForGoal(node *tree.Tree, goal string, currentLevel int, stats *golink
 		return
 	}
 
-	if len(node.Children) == 0 && !found{
+	if len(node.Children) == 0 && currentLevel>0 {
 		mu.Lock()
 		linkName := scraper.StringToWikiUrl(node.Value)
 		links, _ := scraper.Scraper(linkName)
@@ -117,7 +118,7 @@ func SearchForGoal(node *tree.Tree, goal string, currentLevel int, stats *golink
 
 	// if goal not found yet, go to the next children
 	if(currentLevel>0){
-		childSemaphore := make(chan struct{}, 1500) 
+		childSemaphore := make(chan struct{}, 10000) 
 
 		for _, child := range node.Children {
 			wg.Add(1)
