@@ -10,6 +10,7 @@ type Tree struct {
 	MainRoute  bool  // main node to the goal
 	Parent 	*Tree // save parent
 	Children []*Tree // save child
+	Depth 	int // save depth
 }
 
 // function to make a New Node from string
@@ -17,6 +18,7 @@ func NewNode(value string) *Tree {
 	return &Tree{
 		Value:    value,
 		Children: []*Tree{},
+		Depth: 0,
 	}
 }
 
@@ -31,7 +33,13 @@ func (n *Tree) NewNodeLink(link []scraper.Link) {
 // function to add child to the parent
 func (n *Tree) AddChild(child *Tree) {
 	child.Parent = n
+	child.Depth = n.Depth + 1
 	n.Children = append(n.Children, child)
+}
+
+// function to get the depth of the node
+func (n *Tree) GetDepth() int {
+	return n.Depth
 }
 
 // fuunction to make node visited
