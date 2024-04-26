@@ -99,17 +99,7 @@ const Graph = ({node,link}) => {
             .append('line')
             .attr('x1', d => getNodePosition(d.source).x)
             .attr('y1', d => getNodePosition(d.source).y)
-            .attr('x2', d => {
-                const targetNode = getNodePosition(d.target);
-                const level = d.target.level;
-                
-                if (level === Math.max(...data.nodes.map(node => node.level))) {
-                    // return targetNode.x - (level % 2 === 0 ? level * -5 : level * 5); // Adjust x2 based on level
-                    return width/2; // Adjust x2 based on level
-                } else {
-                    return targetNode.x;
-                }
-            })
+            .attr('x2', d => getNodePosition(d.target).x)
             .attr('y2', d => getNodePosition(d.target).y)
             .style('stroke', 'black')
             .style('stroke-width', 2);
@@ -119,13 +109,7 @@ const Graph = ({node,link}) => {
             .data(data.nodes)
             .enter()
             .append('circle')
-            .attr('cx', d => {
-                if (d.level === Math.max(...data.nodes.map(node => node.level))) {
-                    return width/2 + 2; 
-                } else {
-                    return d.x; 
-                }
-            })
+            .attr('cx', d => d.x)
             .attr('cy', d => d.y)
             .attr('r', 15)
             .style('fill', d => {
