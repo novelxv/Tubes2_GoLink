@@ -29,6 +29,8 @@ func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 		stats.PrintStats()
 		// PrintTreeBfs(root)
 		// stats.PrintStats()
+	} else {
+		fmt.Println("Goal not found")
 	}
 
 	return stats
@@ -90,11 +92,13 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		}
 		
 		fmt.Printf("%s \n", current.Value)
-		stats.AddChecked()
 		
 		if tree.IsGoalFound(current.Value, goal) {
 			fmt.Print("Found!!\n")
 			route := tree.GoalRoute(current)
+			for i := 0; i < len(route)-1; i++ {
+				stats.AddChecked()
+			}
 			stats.AddRoute(route)
 			return true
 		}
@@ -175,6 +179,9 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 			if tree.IsGoalFound(node.Value, goal) {
 				fmt.Println("Found!!")
 				route := tree.GoalRoute(node)
+				for i := 0; i < len(route)-1; i++ {
+					stats.AddChecked()
+				}
 				stats.AddRoute(route)
 				cancel() // Notify to cancel all operations
 				return
