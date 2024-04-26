@@ -49,7 +49,7 @@ func main() {
 		var stats *golink.GoLinkStats
 
 		if (toggle){
-			stats = bfs.Bfsfunc(startLink,endLink)
+			stats = bfs.BfsfuncM(startLink,endLink)
 		} else {
 			stats = ids.Idsfunc(startLink,endLink)
 		}

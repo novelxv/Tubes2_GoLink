@@ -118,10 +118,16 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 
 func SearchForGoalBfsM(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	queue := []*tree.Tree{n}
+	found := false
+	
+
+
 	for len(queue) > 0 {
+
 		if (len(stats.Route) == 2){
-			return true;
+			return true
 		}
+
 		current := queue[0]
 		queue = queue[1:]
 		if !current.Visited {
@@ -130,25 +136,39 @@ func SearchForGoalBfsM(n *tree.Tree, goal string, stats *golink.GoLinkStats) boo
 		}
 		
 		fmt.Printf("%s \n", current.Value)
-		stats.AddChecked()
-		
+		if tree.IsGoalFound(current.Value, goal) {
+			fmt.Print("Found!!\n")
+			route := tree.GoalRoute(current)
+			if (found) {
+				if (len(route) == len(stats.Route[0])){
+					stats.AddRoute(route)	
+					for i := 0; i < len(route)-1; i++ {
+						stats.AddChecked()
+					}
+				} else {
+					return true
+				}
+			} else
+			{
+				stats.AddRoute(route)	
+				for i := 0; i < len(route)-1; i++ {
+					stats.AddChecked()
+				}
+				found = true
+			}
+		}
+
 		linkName := scraper.StringToWikiUrl(current.Value)
 		links, _ := scraper.Scraper(linkName)
 		current.NewNodeLink(links)
 
 		for _, child := range current.Children {
-			if  (child.Value == goal){
-				route := tree.GoalRoute(child)
-				stats.AddRoute(route)
-				fmt.Print("Found!!\n")
-				stats.PrintStats()
-
-			} else {
-				if (child.ParentLength() < 2) && !child.Visited {
-					queue = append(queue, child)
-				}
+			if !child.Visited {
+				queue = append(queue, child)
 			}
 		}
+
+		
 	}
 	return true
 }

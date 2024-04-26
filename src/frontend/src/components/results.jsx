@@ -12,10 +12,12 @@ const ResultWrapper = ({ responseData }) => {
                 const existingNode = newNodes.find(node => node.url === url);
                 if (!existingNode) {
                     const nodeLevel = index === level.length - 1 ? maxLength - 1 : index;
+                    const xn = (nodeLevel % 2 === 0) ? -5 * nodeLevel : 5 * nodeLevel;
+
                     newNodes.push({
                         id: newNodes.length, 
                         url: url,
-                        x: 0,
+                        x: xn,
                         y: 100 + 70 * nodeLevel,
                         level: nodeLevel 
                     });
