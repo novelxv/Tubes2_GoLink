@@ -3,18 +3,20 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-
-	"github.com/angiekierra/Tubes2_GoLink/bfs"
+	// "fmt"
+	// "github.com/angiekierra/Tubes2_GoLink/bfs"
 	"github.com/angiekierra/Tubes2_GoLink/golink"
 	"github.com/angiekierra/Tubes2_GoLink/ids"
+	"log"
 	// "github.com/angiekierra/Tubes2_GoLink/scraper"
 	// "github.com/angiekierra/Tubes2_GoLink/tree"
 )
 
 type InputData struct {
-	StartLink string `json:"startLink"`
-	EndLink   string `json:"endLink"`
-	UseToggle bool   `json:"useToggle"`
+    StartLink   string `json:"startLink"`
+    EndLink     string `json:"endLink"`
+    UseToggle   bool   `json:"useToggle"`
+    IsChecked bool   `json:"isChecked"` 
 }
 
 type ResponseData struct {
@@ -44,14 +46,29 @@ func main() {
         startLink := input.StartLink
 		endLink := input.EndLink
 		toggle := input.UseToggle
+		check := input.IsChecked
+
+		log.Println(startLink,endLink,toggle,check)
 
 	
 		var stats *golink.GoLinkStats
-
-		if (toggle){
-			stats = bfs.BfsfuncM(startLink,endLink)
+		// janlup ganti functionnya nanti
+		if (!check) {
+			if (toggle){
+				stats = ids.Idsfunc(startLink,endLink)
+				log.Println("bfs normal")
+			} else {
+				stats = ids.Idsfunc(startLink,endLink)
+				log.Println("ids normal")
+			}
 		} else {
-			stats = ids.Idsfunc(startLink,endLink)
+			if (toggle){
+				stats = ids.Idsfunc(startLink,endLink)
+				log.Println("bfs multi")
+			} else {
+				stats = ids.Idsfunc(startLink,endLink)
+				log.Println("ids multi")
+			}
 		}
 		
 		

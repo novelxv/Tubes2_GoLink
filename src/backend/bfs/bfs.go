@@ -36,32 +36,32 @@ func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 	return stats
 }
 
-func BfsfuncM(value string, goal string) *golink.GoLinkStats {
-    startTime := time.Now()
+// func BfsfuncM(value string, goal string) *golink.GoLinkStats {
+//     startTime := time.Now()
 
-    // save the root
-    root := tree.NewNode(value)
-    stats := golink.NewGoLinkStats()
+//     // save the root
+//     root := tree.NewNode(value)
+//     stats := golink.NewGoLinkStats()
 
-    // use BFS to search for the goal
-    routes := SearchForGoalBfsM(root, goal, stats)
+//     // use BFS to search for the goal
+//     routes := SearchForGoalBfsM(root, goal, stats)
 
-    elapsedTime := time.Since(startTime)
-    stats.SetRuntime(elapsedTime)
+//     elapsedTime := time.Since(startTime)
+//     stats.SetRuntime(elapsedTime)
 
-    if (routes) {
-        // for _, route := range routes {
-        //     stats.AddRoute(route)
-        //     stats.LinksTraversed += len(route)
-        // }
+//     if (routes) {
+//         // for _, route := range routes {
+//         //     stats.AddRoute(route)
+//         //     stats.LinksTraversed += len(route)
+//         // }
 
-        stats.PrintStats()
-        // PrintTreeBfs(root)
-        // stats.PrintStats()
-    }
+//         stats.PrintStats()
+//         // PrintTreeBfs(root)
+//         // stats.PrintStats()
+//     }
 
-    return stats
-}
+//     return stats
+// }
 
 
 
@@ -116,62 +116,74 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 	return false
 }
 
-func SearchForGoalBfsM(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
-	queue := []*tree.Tree{n}
-	found := false
-	
+// func SearchForGoalBfsM(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+// 	queue := []*tree.Tree{n}
+// 	found := false
+// 	routeLevel := 0
 
 
-	for len(queue) > 0 {
+// 	for len(queue) > 0 {
 
-		if (len(stats.Route) == 2){
-			return true
-		}
+// 		if (len(stats.Route) == 3){
+// 			return true
+// 		}
 
-		current := queue[0]
-		queue = queue[1:]
-		if !current.Visited {
-			current.Visited = true
-			stats.AddTraversed()
-		}
+// 		current := queue[0]
+// 		fmt.Println(current.ParentLength())
+// 		if ((current.ParentLength() > routeLevel) && found){
+// 			return true
+// 		}
 		
-		fmt.Printf("%s \n", current.Value)
-		if tree.IsGoalFound(current.Value, goal) {
-			fmt.Print("Found!!\n")
-			route := tree.GoalRoute(current)
-			if (found) {
-				if (len(route) == len(stats.Route[0])){
-					stats.AddRoute(route)	
-					for i := 0; i < len(route)-1; i++ {
-						stats.AddChecked()
-					}
-				} else {
-					return true
-				}
-			} else
-			{
-				stats.AddRoute(route)	
-				for i := 0; i < len(route)-1; i++ {
-					stats.AddChecked()
-				}
-				found = true
-			}
-		}
+// 		queue = queue[1:]
+// 		current.Visited = true
+// 		stats.AddTraversed()
+// 		// if !current.Visited {
+// 		// }
+		
+// 		fmt.Printf("%s \n", current.Value)
+// 		if tree.IsGoalFound(current.Value, goal) {
+// 			fmt.Print("Found!!\n")
+// 			route := tree.GoalRoute(current)
+// 			routeLevel = current.ParentLength()
+// 			stats.AddRoute(route)	
+// 			for i := 0; i < len(route)-1; i++ {
+// 				stats.AddChecked()
+// 			}
+// 			fmt.Println("ROUTELEVEL",routeLevel)
+// 			found = true
+// 			// if (found) {
+// 			// 	if (len(route) == len(stats.Route[0])){
+// 			// 		stats.AddRoute(route)	
+// 			// 		for i := 0; i < len(route)-1; i++ {
+// 			// 			stats.AddChecked()
+// 			// 		}
+// 			// 	} else {
+// 			// 		return true
+// 			// 	}
+// 			// } else
+// 			// {
+// 			// 	stats.AddRoute(route)	
+// 			// 	for i := 0; i < len(route)-1; i++ {
+// 			// 		stats.AddChecked()
+// 			// 	}
+// 			// 	found = true
+// 			// }
+// 		}
 
-		linkName := scraper.StringToWikiUrl(current.Value)
-		links, _ := scraper.Scraper(linkName)
-		current.NewNodeLink(links)
+// 		linkName := scraper.StringToWikiUrl(current.Value)
+// 		links, _ := scraper.Scraper(linkName)
+// 		current.NewNodeLink(links)
 
-		for _, child := range current.Children {
-			if !child.Visited {
-				queue = append(queue, child)
-			}
-		}
+// 		for _, child := range current.Children {
+// 			if !child.Visited {
+// 				queue = append(queue, child)
+// 			}
+// 		}
 
 		
-	}
-	return true
-}
+// 	}
+// 	return false
+// }
 
 func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	ctx, cancel := context.WithCancel(context.Background())
