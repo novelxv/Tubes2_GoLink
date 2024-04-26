@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync"
+
 	"github.com/gocolly/colly"
 )
 
@@ -11,6 +13,12 @@ type Link struct {
 	Name string
 	Url  string
 }
+
+// Cache untuk menyimpan hasil scraping
+var (
+	linkCache = make(map[string][]Link)
+	cacheMutex = sync.Mutex{}
+)
 
 // Printing the Link Struct
 func PrintLink(links []Link) {
@@ -26,21 +34,25 @@ func StringToWikiUrl(name string) string {
 }
 
 
-// Link scrapper
+// Link scrapper with cache
 func Scraper(linkName string) ([]Link, error) {
+	// Cek cache terlebih dahulu
+	cacheMutex.Lock()
+	if links, found := linkCache[linkName]; found {
+		cacheMutex.Unlock()
+		fmt.Println("Cache hit for:", linkName)
+		return links, nil
+	}
+	cacheMutex.Unlock()
+
 	c := colly.NewCollector()
-
-
 	var links []Link
 
 	urlPattern := regexp.MustCompile(`^/wiki/..*`)
 	avoid := regexp.MustCompile(`^/wiki/(Special:|Talk:|User:|Portal:|Wikipedia:|File:|Category:|Help:|Template:|Template_talk:).*`)
 
-
-	// Only selects a element with title attributes
 	c.OnHTML("div#mw-content-text a[title]", func(h *colly.HTMLElement) {
 		link := h.Attr("href")
-
 		if (urlPattern.MatchString(link) && !avoid.MatchString(link)) {
 			item := Link{}
 			item.Name = h.Attr("title")
@@ -50,25 +62,29 @@ func Scraper(linkName string) ([]Link, error) {
 	})
 
 	// When first requested
-    // c.OnRequest(func(r *colly.Request) {
-    //     fmt.Println("Visiting", r.URL)
-    // })
+    c.OnRequest(func(r *colly.Request) {
+        fmt.Println("Visiting", r.URL)
+    })
 
 	// When received a response
-    // c.OnResponse(func(r *colly.Response) {
-    //     fmt.Println("Got a response from", r.Request.URL)
-    // })
+    c.OnResponse(func(r *colly.Response) {
+        fmt.Println("Got a response from", r.Request.URL)
+    })
 
-	// // When encountering an error
-    // c.OnError(func(r *colly.Response, e error) {
-    //     fmt.Println("Error:", e)
-    // })
+	// When encountering an error
+    c.OnError(func(r *colly.Response, e error) {
+        fmt.Println("Error:", e)
+    })
 
-	// Visiting the link and scraping
-    err := c.Visit(linkName)
-    if err != nil {
-        return nil, err
-    }
+	err := c.Visit(linkName)
+	if err != nil {
+		return nil, err
+	}
 
-    return links, nil
+	// Simpan hasil ke cache sebelum return
+	cacheMutex.Lock()
+	linkCache[linkName] = links
+	cacheMutex.Unlock()
+
+	return links, nil
 }

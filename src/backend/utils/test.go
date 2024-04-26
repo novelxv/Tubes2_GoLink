@@ -24,9 +24,9 @@ func mainC() {
 	endLink := "General officer"
 
 	if (toggle){
-		stats = bfs.Bfsfunc(startLink,endLink)
+		stats = bfs.Bfsfunc(startLink,endLink,true)
 	} else {
-		stats = ids.Idsfunc(startLink,endLink)
+		stats = ids.Idsfunc(startLink,endLink,true)
 	}
 		
 	stats.PrintStats()

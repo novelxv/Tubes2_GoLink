@@ -3,13 +3,12 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	// "fmt"
-	// "github.com/angiekierra/Tubes2_GoLink/bfs"
+
+	"github.com/angiekierra/Tubes2_GoLink/bfs"
 	"github.com/angiekierra/Tubes2_GoLink/golink"
 	"github.com/angiekierra/Tubes2_GoLink/ids"
 	"log"
-	// "github.com/angiekierra/Tubes2_GoLink/scraper"
-	// "github.com/angiekierra/Tubes2_GoLink/tree"
+
 )
 
 type InputData struct {
@@ -52,25 +51,20 @@ func main() {
 
 	
 		var stats *golink.GoLinkStats
-		// janlup ganti functionnya nanti
+		
 		if (!check) {
 			if (toggle){
-				stats = ids.Idsfunc(startLink,endLink)
-				log.Println("bfs normal")
+				stats = bfs.Bfsfunc(startLink,endLink,false)
 			} else {
-				stats = ids.Idsfunc(startLink,endLink)
-				log.Println("ids normal")
+				stats = ids.Idsfunc(startLink,endLink,false)
 			}
 		} else {
 			if (toggle){
-				stats = ids.Idsfunc(startLink,endLink)
-				log.Println("bfs multi")
+				stats = bfs.Bfsfunc(startLink,endLink,true)
 			} else {
-				stats = ids.Idsfunc(startLink,endLink)
-				log.Println("ids multi")
+				stats = ids.Idsfunc(startLink,endLink,true)
 			}
 		}
-		
 		
 		runTime := stats.Runtime.Milliseconds()
 		
