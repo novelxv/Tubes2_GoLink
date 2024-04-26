@@ -111,10 +111,6 @@ Here is an overview of how IDS works:
 3. If the goal node is not found at depth 0, increment the maximum depth limit by 1 and repeat step 2.
 4. Continue incrementing the depth limit and performing DFS until the goal node is found or until all nodes have been explored.
 
-- Mencari cosine similarity berdasarkan konsep CBIR warna atau CBIR tekstur dari input gambar/frame camera dan dataset/image scraping
-- Mengurutkan nilai cosine similarity dari yang terbesar hingga terkecil dengan kemiripan > 60% saja yang ditampilkan
-- Mengunduh hasil pencarian berupa gambar yang ditampilkan dalam format PDF
-
 
 ## Screenshots
 
