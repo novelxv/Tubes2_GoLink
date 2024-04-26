@@ -50,6 +50,8 @@ func PrintTreeBfs(n *tree.Tree) {
 	fmt.Println()
 }
 
+var mu sync.Mutex
+
 // function to search the word goal with BFS
 func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	queue := []*tree.Tree{n}
@@ -73,9 +75,11 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 			return true
 		}
 		
+		mu.Lock()
 		linkName := scraper.StringToWikiUrl(current.Value)
 		links, _ := scraper.Scraper(linkName)
 		current.NewNodeLink(links)
+		mu.Unlock()
 
 		for _, child := range current.Children {
 			if !child.Visited {
@@ -91,7 +95,7 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 	defer cancel()
 
 	var wg sync.WaitGroup
-	nodeQueue := make(chan *tree.Tree, 10) 
+	nodeQueue := make(chan *tree.Tree, 5) 
 
 	wg.Add(1)
 	go func() {
@@ -120,20 +124,28 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 				return
 			}
 
+			mu.Lock()
 			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
 
-			const maxGoroutines = 500 
+			const maxGoroutines = 1500 
 			sem := make(chan bool, maxGoroutines)
 
-			visitedNodes := make(map[string]*tree.Tree)
+			if len(links) > 100 {
+				links = links[:100]
+			}
+
+			sem = make(chan bool, maxGoroutines)
+
+			visitedNodes := make(map[string]struct{})
 
 			for _, link := range links {
-				if visitedNodes[link.Name] != nil {
+				if _, ok := visitedNodes[link.Name]; ok {
 					continue
 				}
 				child := tree.NewNode(link.Name)
 				node.AddChild(child)
-				visitedNodes[link.Name] = child
+				visitedNodes[link.Name] = struct{}{}
+
 
 				if !child.Visited {
 					wg.Add(1)
@@ -150,6 +162,7 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 					}(child)
 				}
 			}
+			mu.Unlock()
 		}
 	}()
 
