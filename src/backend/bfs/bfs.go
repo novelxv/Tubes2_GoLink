@@ -147,7 +147,7 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 				visitedNodes[link.Name] = struct{}{}
 
 
-				if !child.Visited {
+				if !child.Visited && child.GetDepth() <= 9 {
 					wg.Add(1)
 					go func(ch *tree.Tree) {
 						sem <- true
