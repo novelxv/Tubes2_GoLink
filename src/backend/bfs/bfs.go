@@ -12,15 +12,21 @@ import (
 
 
 // main BFS function
-func Bfsfunc(value string, goal string) *golink.GoLinkStats {
+func Bfsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	startTime := time.Now()
 
 	// save the root
 	root := tree.NewNode(value)
 	stats := golink.NewGoLinkStats()
 
+	var found bool
+
 	// use BFS to search for the goal
-	found := SearchForGoalBfsMT(root, goal, stats)
+	if (multisol){
+		found = SearchForGoalBfsMTMS(root, goal, stats)
+	} else {
+		found = SearchForGoalBfsMT(root, goal, stats)
+	}
 
 	elapsedTime := time.Since(startTime)
 	stats.SetRuntime(elapsedTime)
@@ -95,7 +101,7 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 	defer cancel()
 
 	var wg sync.WaitGroup
-	nodeQueue := make(chan *tree.Tree, 5) 
+	nodeQueue := make(chan *tree.Tree, 10) 
 
 	wg.Add(1)
 	go func() {
@@ -169,4 +175,91 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 	wg.Wait() // Wait for all goroutines to complete before finishing
 	<-ctx.Done() // Ensure context is canceled
 	return ctx.Err() == context.Canceled
+}
+
+func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	var wg sync.WaitGroup
+	nodeQueue := make(chan *tree.Tree, 10)
+	
+	found := false
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		nodeQueue <- root
+	}()
+
+	go func() {
+		defer close(nodeQueue) // Ensure channel is closed when all processing is done
+		for node := range nodeQueue {
+			if node.Visited {
+				continue
+			}
+
+			node.Visited = true
+			stats.AddTraversed()
+
+			if tree.IsGoalFound(node.Value, goal) {
+				fmt.Println("Found!!")
+				route := tree.GoalRoute(node)
+				for i := 0; i < len(route)-1; i++ {
+					stats.AddChecked()
+				}
+				stats.AddRoute(route)
+				found = true
+				// cancel() // Notify to cancel all operations
+				// return
+			}
+
+			mu.Lock()
+			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
+
+			const maxGoroutines = 1500 
+			sem := make(chan bool, maxGoroutines)
+
+			if len(links) > 100 {
+				links = links[:100]
+			}
+
+			sem = make(chan bool, maxGoroutines)
+
+			visitedNodes := make(map[string]struct{})
+
+			for _, link := range links {
+				if _, ok := visitedNodes[link.Name]; ok {
+					continue
+				}
+				child := tree.NewNode(link.Name)
+				node.AddChild(child)
+				visitedNodes[link.Name] = struct{}{}
+
+
+				if !child.Visited && child.GetDepth() <= 9 {
+					wg.Add(1)
+					go func(ch *tree.Tree) {
+						sem <- true
+						defer func() {
+							<-sem
+							wg.Done()
+						}()
+						select {
+						case nodeQueue <- ch:
+						case <-ctx.Done(): // Handle cancellation
+						}
+					}(child)
+				}
+			}
+			mu.Unlock()
+		}
+	}()
+
+	wg.Wait() // Wait for all goroutines to complete before finishing
+	<-ctx.Done() // Ensure context is canceled
+	if ctx.Err() == context.DeadlineExceeded {
+		fmt.Println("Search timed out after 5 minutes")
+	}
+	return found
 }
