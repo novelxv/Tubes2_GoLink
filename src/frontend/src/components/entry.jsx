@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch"
 import { Button } from './ui/button';
 import { useToast } from './ui/use-toast';
+import { Checkbox } from "@/components/ui/checkbox"
 import axios from 'axios';
 import Loading from './loading';
 import ResultWrapper from './results';
@@ -12,6 +13,7 @@ const Entry = () => {
     const [startLink, setStartLink] = useState('');
     const [endLink, setEndLink] = useState('');
     const [useToggle, setUseToggle] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
     const [responseData, setResponseData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [focusOnStart, setFocusOnStart] = useState(true);
@@ -22,28 +24,30 @@ const Entry = () => {
     const { toast } = useToast()
 
     
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        
         if (!startLink || !endLink) {
             toast({
                 title: "Oh, no! Your input is Blank",
                 description: "Start Article or End Article is empty. Please fill both fields.",
                 variant : "destructive"
-                })
+            })
             console.log("Start Article or End Article is empty. Please fill both fields.");
             return;
         }
-
+        
         setLoading(true);
         try {
             const response = await axios.post('http://localhost:8080/api/input', {
                 startLink: startLink,
                 endLink: endLink,
-                useToggle: useToggle
+                useToggle: useToggle,
+                isChecked: isChecked
             });
-
+            
+            console.log(startLink,endLink,useToggle,isChecked)
             const responseData  = response.data;
             setResponseData(responseData);
         } catch (error) {
@@ -51,15 +55,20 @@ const Entry = () => {
                 title: "Oh, no! There is something wrong",
                 description: "There was a problem with your request",
                 variant : "destructive"
-                })
+            })
             console.error('Error sending the data', error);
         } finally {
             setLoading(false);
         }
     };
-
+    
     const handleSwitchChange = () => {
         setUseToggle(!useToggle);
+    };
+    
+    // Function to handle checkbox state changes
+    const handleCheckboxChange = (event) => {
+        setIsChecked(!isChecked);
     };
 
     const switchText = () => {
@@ -73,7 +82,7 @@ const Entry = () => {
         }
         setFocusOnStart(!focusOnStart);
     };
-
+    
     const fetchSuggestions = async (input, setSuggestions, limit = 6) => {
         try {
             const response = await fetch(
@@ -108,25 +117,6 @@ const Entry = () => {
         setEndLink(suggestion);
         setEndLinkSuggestions([]);
     };
-
-    // const dummyResponseData = {
-    //     articlesVisited: 10,
-    //     articlesSearched: 20,
-    //     timeNeeded: 4,
-    //     articles: [
-    //         [
-    //           "https://en.wikipedia.org/wiki/Albert_Einstein",
-    //           "https://en.wikipedia.org/wiki/Relativy_theory",
-    //         //   "https://en.wikipedia.org/wiki/Mathematics",
-    //         //   "https://en.wikipedia.org/wiki/Calculus",
-    //         //   "https://en.wikipedia.org/wiki/AI",
-    //         //   "https://en.wikipedia.org/wiki/AB",
-    //         //   "https://en.wikipedia.org/wiki/AC",
-    //         //   "https://en.wikipedia.org/wiki/AD",
-    //         ],
-          
-    //       ]
-    // };
 
     return (
         <div className='bg-neutral-800 flex flex-col items-center justify-center h-full mt-20 pt-10'>
@@ -190,6 +180,15 @@ const Entry = () => {
                             />
                             <p className="text-neutral-100 text-lg"><b>BFS</b></p>
                         </div>
+                    </div>
+                    <div className='flex flex-row gap-2 items-center justify-center pb-5'>
+                        <Checkbox
+                            checked={isChecked}
+                            onCheckedChange={handleCheckboxChange}
+                        />                        
+                        <p className="font-medium">
+                            Show multiple solutions
+                        </p>
                     </div>
                     <Button type='submit' variant="default" className="hover:translate-y-2 transition-transform duration-300">Search Now</Button>
                 </form>
