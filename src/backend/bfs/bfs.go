@@ -185,6 +185,7 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 	nodeQueue := make(chan *tree.Tree, 10)
 	
 	found := false
+	var solutionDepth int
 
 	wg.Add(1)
 	go func() {
@@ -210,8 +211,14 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 				}
 				stats.AddRoute(route)
 				found = true
+				solutionDepth = len(route) - 1
 				// cancel() // Notify to cancel all operations
 				// return
+			}
+
+			if solutionDepth != 0 && node.GetDepth() > solutionDepth {
+				cancel()
+				return
 			}
 
 			mu.Lock()
@@ -260,6 +267,8 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 	<-ctx.Done() // Ensure context is canceled
 	if ctx.Err() == context.DeadlineExceeded {
 		fmt.Println("Search timed out after 5 minutes")
-	}
+	} else if ctx.Err() == context.Canceled {
+        fmt.Println("Search stopped after reaching a level beyond the first solution")
+    }
 	return found
 }
