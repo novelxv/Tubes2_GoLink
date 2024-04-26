@@ -50,9 +50,9 @@ func Scraper(linkName string) ([]Link, error) {
 	})
 
 	// When first requested
-    c.OnRequest(func(r *colly.Request) {
-        fmt.Println("Visiting", r.URL)
-    })
+    // c.OnRequest(func(r *colly.Request) {
+    //     fmt.Println("Visiting", r.URL)
+    // })
 
 	// When received a response
     // c.OnResponse(func(r *colly.Response) {

@@ -68,3 +68,13 @@ func GoalRoute (n *Tree) [] string{
 
 	return route
 }
+
+
+
+func (n *Tree) ParentLength() int {
+	length := 0
+	for curr := n.Parent; curr != nil; curr = curr.Parent {
+		length++
+	}
+	return length
+}

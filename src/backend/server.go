@@ -1,9 +1,6 @@
 package main
 
 import (
-	// "log"
-	// "time"
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
@@ -48,9 +45,7 @@ func main() {
 		endLink := input.EndLink
 		toggle := input.UseToggle
 
-		fmt.Println(startLink)
-		fmt.Println(endLink)
-		fmt.Println(endLink)
+	
 		var stats *golink.GoLinkStats
 
 		if (toggle){
@@ -61,8 +56,8 @@ func main() {
 		
 		
 		runTime := stats.Runtime.Milliseconds()
-		fmt.Println("Runtime:",runTime)
-		stats.PrintStats()
+		
+
 		c.JSON(200, ResponseData{
 			Articles:          stats.Route,
 			ArticlesVisited:  stats.LinksChecked,

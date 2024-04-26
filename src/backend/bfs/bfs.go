@@ -34,6 +34,36 @@ func Bfsfunc(value string, goal string) *golink.GoLinkStats {
 	return stats
 }
 
+func BfsfuncM(value string, goal string) *golink.GoLinkStats {
+    startTime := time.Now()
+
+    // save the root
+    root := tree.NewNode(value)
+    stats := golink.NewGoLinkStats()
+
+    // use BFS to search for the goal
+    routes := SearchForGoalBfsM(root, goal, stats)
+
+    elapsedTime := time.Since(startTime)
+    stats.SetRuntime(elapsedTime)
+
+    if (routes) {
+        // for _, route := range routes {
+        //     stats.AddRoute(route)
+        //     stats.LinksTraversed += len(route)
+        // }
+
+        stats.PrintStats()
+        // PrintTreeBfs(root)
+        // stats.PrintStats()
+    }
+
+    return stats
+}
+
+
+
+
 // function to print the tree using BFS
 func PrintTreeBfs(n *tree.Tree) {
 	queue := []*tree.Tree{n}
@@ -58,7 +88,7 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 			current.Visited = true
 			stats.AddTraversed()
 		}
-
+		
 		fmt.Printf("%s \n", current.Value)
 		stats.AddChecked()
 		
@@ -80,6 +110,43 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		}
 	}
 	return false
+}
+
+func SearchForGoalBfsM(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+	queue := []*tree.Tree{n}
+	for len(queue) > 0 {
+		if (len(stats.Route) == 2){
+			return true;
+		}
+		current := queue[0]
+		queue = queue[1:]
+		if !current.Visited {
+			current.Visited = true
+			stats.AddTraversed()
+		}
+		
+		fmt.Printf("%s \n", current.Value)
+		stats.AddChecked()
+		
+		linkName := scraper.StringToWikiUrl(current.Value)
+		links, _ := scraper.Scraper(linkName)
+		current.NewNodeLink(links)
+
+		for _, child := range current.Children {
+			if  (child.Value == goal){
+				route := tree.GoalRoute(child)
+				stats.AddRoute(route)
+				fmt.Print("Found!!\n")
+				stats.PrintStats()
+
+			} else {
+				if (child.ParentLength() < 2) && !child.Visited {
+					queue = append(queue, child)
+				}
+			}
+		}
+	}
+	return true
 }
 
 func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
