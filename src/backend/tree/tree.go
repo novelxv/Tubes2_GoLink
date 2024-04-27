@@ -4,6 +4,7 @@ import (
 	"github.com/angiekierra/Tubes2_GoLink/scraper"
 )
 
+/* Tree Struct */
 type Tree struct {
 	Value    string // the link name
 	Visited  bool   // check whether a node has already been visited or not
@@ -13,7 +14,7 @@ type Tree struct {
 	Depth 	int // save depth
 }
 
-// function to make a New Node from string
+/* Buat Node Baru */
 func NewNode(value string) *Tree {
 	return &Tree{
 		Value:    value,
@@ -22,7 +23,7 @@ func NewNode(value string) *Tree {
 	}
 }
 
-// function to make a New Node from link
+/* Buat Nodes untuk kumpulan link */ 
 func (n *Tree) NewNodeLink(link []scraper.Link) {
 	for _, link := range link {
 		temp := NewNode(link.Name)
@@ -30,39 +31,39 @@ func (n *Tree) NewNodeLink(link []scraper.Link) {
 	}
 }
 
-// function to add child to the parent
+/* Menambah Child dari Node Parent */
 func (n *Tree) AddChild(child *Tree) {
 	child.Parent = n
 	child.Depth = n.Depth + 1
 	n.Children = append(n.Children, child)
 }
 
-// function to get the depth of the node
+/* Get Depth */
 func (n *Tree) GetDepth() int {
 	return n.Depth
 }
 
-// fuunction to make node visited
+/* Ubah Node jadi Visited */
 func (n *Tree) AddVisitedNode() {
 	n.Visited = true
 }
 
-// fuunction to add node to main route
+/* Menambahkan Node ke Main Route */
 func (n *Tree) AddMainRoute() {
 	n.MainRoute = true
 }
 
-// fuunction to remove node from main route
+/* Remove Node dari Main Route */
 func (n *Tree) UndoMainRoute() {
 	n.MainRoute = false
 }
 
-// function to check if the current value is the same with the goal
+/* Cek apakah Node adalah Goal */
 func IsGoalFound(s1 string, s2 string) bool {
 	return s1 == s2
 }
 
-// function to get the route to the goal
+/* Mendapatkan Route ke Goal */
 func GoalRoute (n *Tree) [] string{
 	if n == nil {
 		return nil
@@ -78,8 +79,7 @@ func GoalRoute (n *Tree) [] string{
 	return route
 }
 
-
-
+/* Mendapatkan Panjang Parent ke Child  */
 func (n *Tree) ParentLength() int {
 	length := 0
 	for curr := n.Parent; curr != nil; curr = curr.Parent {

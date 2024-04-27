@@ -6,15 +6,15 @@ import (
 	"reflect"
 )
 
-// fungsi untuk menyimpan statistik pencarian link Wiki
+/* Struct GoLinkStats */
 type GoLinkStats struct {
 	Route              [][]string  // list rute pencarian
-	LinksTraversed int         // Jumlah artikel yang telah dilalui
-	LinksChecked   int         // Jumlah artikel yang telah diperiksa
-	Runtime           time.Duration // Durasi runtime pencarian
+	LinksTraversed int         // jumlah artikel yang telah dilalui
+	LinksChecked   int         // jumlah artikel yang telah diperiksa
+	Runtime           time.Duration // durasi runtime pencarian
 }
 
-// fungsi untuk menginisialisasi GoLinkStats dengan pohon root
+/* Inisialisasi Stats */
 func NewGoLinkStats() *GoLinkStats {
 	return &GoLinkStats{
 		Route:         [][]string{},
@@ -24,17 +24,17 @@ func NewGoLinkStats() *GoLinkStats {
 	}
 }
 
-// fungsi untuk menambahkan jumlah artikel yang telah dilalui
+/* Menambahkan Jumlah Artikel yang Telah Dilalui */
 func (g *GoLinkStats) AddTraversed() {
 	g.LinksTraversed++
 }
 
-// fungsi untuk menambahkan jumlah artikel yang telah diperiksa
+/* Menambahkan Jumlah Artikel yang Telah Diperiksa */
 func (g *GoLinkStats) AddChecked() {
 	g.LinksChecked++
 }
 
-// fungsi buat menambahkan rute
+/* Menambahkan Rute */
 func (g *GoLinkStats) AddRoute(rute []string) {
 	if(!SameList(g.Route,rute)){
 		g.Route = append(g.Route, rute)
@@ -43,12 +43,12 @@ func (g *GoLinkStats) AddRoute(rute []string) {
 	
 }
 
-// fungsi untuk mengatur runtime pencarian
+/* Set Durasi Runtime */
 func (g *GoLinkStats) SetRuntime(duration time.Duration) {
 	g.Runtime = duration
 }
 
-// fungsi untuk memeriksa apakah list sudah ada di dalam Route
+/* Memeriksa Apakah List Sudah Ada di dalam Route */
 func SameList(listOfLists [][]string, checkList []string) bool {
 	// Iterasi melalui setiap list di Route
 	for _, list := range listOfLists {
@@ -60,7 +60,7 @@ func SameList(listOfLists [][]string, checkList []string) bool {
 	return false
 }
 
-// fungsi untuk mencetak statistik pencarian
+/* Print Stats */
 func (g *GoLinkStats) PrintStats() {
 	fmt.Printf("Total Links Traversed: %d\n", g.LinksTraversed)
 	fmt.Printf("Total Links Checked: %d\n", g.LinksChecked)

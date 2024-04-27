@@ -13,6 +13,7 @@ import (
 
 )
 
+/* Input Data Struct */
 type InputData struct {
     StartLink   string `json:"startLink"`
     EndLink     string `json:"endLink"`
@@ -20,6 +21,7 @@ type InputData struct {
     IsChecked bool   `json:"isChecked"` 
 }
 
+/* Response Data Struct */
 type ResponseData struct {
 	Articles [][]string      `json:"articles"`
 	ArticlesVisited   int  `json:"articlesVisited"`
@@ -27,24 +29,19 @@ type ResponseData struct {
 	TimeNeeded int64		`json:"timeNeeded"`	
 }
 
-// testing
+/* Main Function */
 func main() {
-
-	// load first database
+	// load databases
 	scraper.LoadFromJSON("./scraper/final.json")
-
-	// load second database
 	scraper.LoadFromJSON("./scraper/final2.json")
-	
+	scraper.LoadFromJSON("./scraper/final3.json")
 
-	
 	r := gin.Default()
 
 	r.Use(cors.Default())
 
 	r.POST("/api/input", func(c *gin.Context) {
 		var input InputData
-
 
 		// / Bind the request body to the inputData struct
         if err := c.BindJSON(&input); err != nil {
@@ -60,7 +57,6 @@ func main() {
 
 		log.Println(startLink,endLink,toggle,check)
 
-	
 		var stats *golink.GoLinkStats
 		
 		if (!check) {
@@ -78,7 +74,6 @@ func main() {
 		}
 		
 		runTime := stats.Runtime.Milliseconds()
-		
 
 		c.JSON(200, ResponseData{
 			Articles:          stats.Route,
@@ -86,7 +81,6 @@ func main() {
 			ArticlesSearched:  stats.LinksTraversed,
 			TimeNeeded:        runTime,
 		})
-
 
 	})
 	r.Run() 

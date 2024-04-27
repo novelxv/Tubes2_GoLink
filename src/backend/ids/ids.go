@@ -16,7 +16,7 @@ var (
 	single bool = false
 )
 
-// main IDS function
+/* Main IDS Function */
 func Idsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	// save the start time
 	startTime := time.Now()
@@ -67,7 +67,7 @@ func Idsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	return stats
 }
 
-// print only the visited node
+/* Print Tree */
 func PrintTreeIds(n *tree.Tree) {
 	if n.Visited {
 		fmt.Printf("%s", n.Value)
@@ -91,7 +91,7 @@ func PrintTreeIds(n *tree.Tree) {
 	}
 }
 
-// function to search the word goal recursively in IDS
+/* Search For Goal */
 func SearchForGoal(ctx context.Context, node *tree.Tree, goal string, currentLevel int, stats *golink.GoLinkStats, onesolution bool) {
 	select {
 		case <-time.After(5*time.Minute):
