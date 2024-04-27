@@ -1,1 +1,1 @@
-src/backend/scraper/*.csv filter=lfs diff=lfs merge=lfs -text
+src/backend/scraper/*.json filter=lfs diff=lfs merge=lfs -text
