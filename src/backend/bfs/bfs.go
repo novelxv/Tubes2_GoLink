@@ -8,7 +8,20 @@ import (
 	"github.com/angiekierra/Tubes2_GoLink/scraper"
 	"github.com/angiekierra/Tubes2_GoLink/tree"
 	"github.com/angiekierra/Tubes2_GoLink/golink"
+
+	// _ "net/http/pprof"
+	// "net/http"
+	// "log"
 )
+
+// func init() {
+//     go func() {
+//         fmt.Println("Starting server for profiling at http://localhost:6060")
+//         if err := http.ListenAndServe("localhost:6060", nil); err != nil {
+//             log.Fatalf("HTTP server ListenAndServe: %v", err)
+//         }
+//     }()
+// }
 
 // main BFS function
 func Bfsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
@@ -18,14 +31,8 @@ func Bfsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	root := tree.NewNode(value)
 	stats := golink.NewGoLinkStats()
 
-	var found bool
-
 	// use BFS to search for the goal
-	if (multisol){
-		found = SearchForGoalBfsMTMS(root, goal, stats)
-	} else {
-		found = SearchForGoalBfsMT(root, goal, stats)
-	}
+	found := SearchForGoalBfs(root, goal, stats, multisol)
 
 	elapsedTime := time.Since(startTime)
 	stats.SetRuntime(elapsedTime)
@@ -55,125 +62,15 @@ func PrintTreeBfs(n *tree.Tree) {
 	fmt.Println()
 }
 
-// function to search the word goal with BFS
-func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
-	queue := []*tree.Tree{n}
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		if !current.Visited {
-			current.Visited = true
-			stats.AddChecked()
-		}
-		
-		fmt.Printf("%s \n", current.Value)
-		
-		if tree.IsGoalFound(current.Value, goal) {
-			fmt.Print("Found!!\n")
-			route := tree.GoalRoute(current)
-			stats.AddRoute(route)
-			return true
-		}
-		
-		linkName := scraper.StringToWikiUrl(current.Value)
-		links, _ := scraper.Scraper(linkName)
-		current.NewNodeLink(links)
-
-		for _, child := range current.Children {
-			if !child.Visited {
-				queue = append(queue, child)
-			}
-		}
-	}
-	return false
-}
-
 var mu sync.Mutex
 
-func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	var wg sync.WaitGroup
-	nodeQueue := make(chan *tree.Tree, 10) 
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		nodeQueue <- root
-	}()
-
-	go func() {
-		defer close(nodeQueue) // Ensure channel is closed when all processing is done
-		for node := range nodeQueue {
-			if node.Visited {
-				continue
-			}
-
-			node.Visited = true
-			stats.AddChecked()
-
-			if tree.IsGoalFound(node.Value, goal) {
-				fmt.Println("Found!!")
-				route := tree.GoalRoute(node)
-				stats.AddRoute(route)
-				cancel() // Notify to cancel all operations
-				return
-			}
-
-			mu.Lock()
-			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
-
-			const maxGoroutines = 10000 
-			sem := make(chan bool, maxGoroutines)
-
-			// if len(links) > 100 {
-			// 	links = links[:100]
-			// }
-
-			sem = make(chan bool, maxGoroutines)
-
-			visitedNodes := make(map[string]struct{})
-
-			for _, link := range links {
-				if _, ok := visitedNodes[link.Name]; ok {
-					continue
-				}
-				child := tree.NewNode(link.Name)
-				node.AddChild(child)
-				visitedNodes[link.Name] = struct{}{}
-
-
-				if !child.Visited && child.GetDepth() <= 9 {
-					wg.Add(1)
-					go func(ch *tree.Tree) {
-						sem <- true
-						defer func() {
-							<-sem
-							wg.Done()
-						}()
-						select {
-						case nodeQueue <- ch:
-						case <-ctx.Done(): // Handle cancellation
-						}
-					}(child)
-				}
-			}
-			mu.Unlock()
-		}
-	}()
-
-	wg.Wait() // Wait for all goroutines to complete before finishing
-	<-ctx.Done() // Ensure context is canceled
-	return ctx.Err() == context.Canceled
-}
-
-func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
+// function to search the word goal with BFS
+func SearchForGoalBfs(root *tree.Tree, goal string, stats *golink.GoLinkStats, multisol bool) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
 
 	var wg sync.WaitGroup
-	nodeQueue := make(chan *tree.Tree, 10)
+	nodeQueue := make(chan *tree.Tree, 10000000)
 	
 	found := false
 	var solutionDepth int
@@ -194,14 +91,21 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 			node.Visited = true
 			stats.AddChecked()
 
+			// if stats.LinksChecked > 2500 {
+			// 	cancel()
+			// 	return
+			// }
+
 			if tree.IsGoalFound(node.Value, goal) {
 				fmt.Println("Found!!")
 				route := tree.GoalRoute(node)
 				stats.AddRoute(route)
 				found = true
 				solutionDepth = len(route) - 1
-				// cancel() // Notify to cancel all operations
-				// return
+				if !multisol {
+					cancel() // Notify to cancel all operations
+					return
+				}
 			}
 
 			if solutionDepth != 0 && node.GetDepth() > solutionDepth {
@@ -212,12 +116,12 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 			mu.Lock()
 			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
 
-			const maxGoroutines = 1500 
+			const maxGoroutines = 10000
 			sem := make(chan bool, maxGoroutines)
 
-			if len(links) > 100 {
-				links = links[:100]
-			}
+			// if len(links) > 150 {
+			// 	links = links[:150]
+			// }
 
 			sem = make(chan bool, maxGoroutines)
 
@@ -232,7 +136,7 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 				visitedNodes[link.Name] = struct{}{}
 
 
-				if !child.Visited && child.GetDepth() <= 9 {
+				if !child.Visited && child.GetDepth() <= 6 {
 					wg.Add(1)
 					go func(ch *tree.Tree) {
 						sem <- true
