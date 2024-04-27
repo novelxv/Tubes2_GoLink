@@ -18,14 +18,12 @@ type Link struct {
 // Cache untuk menyimpan hasil scraping
 var (
 	LinkCache = make(map[string][]Link)
-	LinkCache = make(map[string][]Link)
 	cacheMutex = sync.Mutex{}
 )
 
 // Printing the Link Struct
 func PrintLink(links []Link) {
 	for _, item := range links {
-		fmt.Printf("Title: %s", item.Name)
 		fmt.Printf("Title: %s", item.Name)
 	}
 }
@@ -41,17 +39,11 @@ func UrlToString(url string) string {
 	title = strings.ReplaceAll(title, "_", " ")
 	return title
 }
-func UrlToString(url string) string {
-	title := strings.TrimPrefix(url, "https://en.wikipedia.org/wiki/")
-	title = strings.ReplaceAll(title, "_", " ")
-	return title
-}
 
 // Link scrapper with cache
 func Scraper(linkName string) ([]Link, error) {
 	// Cek cache terlebih dahulu
 	cacheMutex.Lock()
-	if links, found := LinkCache[linkName]; found {
 	if links, found := LinkCache[linkName]; found {
 		cacheMutex.Unlock()
 		fmt.Println("Cache hit for:", linkName)
@@ -102,3 +94,129 @@ func Scraper(linkName string) ([]Link, error) {
 
 	return links, nil
 }
+
+// BfsScrapper is a breadth-first scrapper that scrapes links from a given start link
+func BfsScrapper(startLink string) ([]Link, error) {
+    visited := make(map[string]bool)
+    queue := []string{startLink}
+    var links []Link
+    var mu sync.Mutex
+	defer func() {
+		err := SaveToJSON("final28.json")
+		if err != nil {
+			fmt.Println("Error saving data to JSON:", err)
+		}
+	}()
+	
+	count := 0
+    for len(queue) > 0 {
+		if count % 100 == 0 {
+			err := SaveToJSON("testing.json")
+			if err != nil {
+				fmt.Println("Error saving data to JSON:", err)
+			}
+		}
+		if (count == 10000){
+			return links,nil
+		}
+        currentLink := queue[0]
+        queue = queue[1:]
+
+        // Check if the link has been visited before
+        mu.Lock()
+        if visited[currentLink] {
+            mu.Unlock()
+            continue
+        }
+        visited[currentLink] = true
+        mu.Unlock()
+
+        // Check if the link exists in the LinkCache
+        cacheMutex.Lock()
+        _, exists := LinkCache[currentLink]
+        cacheMutex.Unlock()
+        if exists {
+            continue
+        }
+
+        // Scrape the current link
+        scrapedLinks, err := Scraper(currentLink)
+        if err != nil {
+            fmt.Println("Error scraping link:", err)
+        }
+
+        // Append the scraped links to the result
+        mu.Lock()
+        links = append(links, scrapedLinks...)
+        mu.Unlock()
+
+        // Append the scraped links to the LinkCache
+        cacheMutex.Lock()
+        LinkCache[currentLink] = scrapedLinks
+        cacheMutex.Unlock()
+
+        // Enqueue newly discovered links to the queue
+        mu.Lock()
+        for _, l := range scrapedLinks {
+            if !visited[l.Name] {
+                queue = append(queue, StringToWikiUrl(l.Name))
+            }
+        }
+        mu.Unlock()
+		count++
+    }
+
+    return links, nil
+}
+
+// SaveToJSON saves the LinkCache map to a JSON file
+func SaveToJSON(filename string) error {
+    file, err := os.Create(filename)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    encoder := json.NewEncoder(file)
+    encoder.SetIndent("", "    ")
+    return encoder.Encode(LinkCache)
+}
+
+
+// LoadFromJSON loads the LinkCache map from a JSON file
+func LoadFromJSON(filename string) error {
+    file, err := os.Open(filename)
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    decoder := json.NewDecoder(file)
+    err = decoder.Decode(&LinkCache)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+// PrintLinkCache prints the contents of the LinkCache map
+func PrintLinkCache() {
+    for k, v := range LinkCache {
+        fmt.Println(k, ":", v)
+    }
+}
+
+// func main() {
+//     // Attempt to load previously saved data
+//     // if err := LoadFromJSON("testing.json"); err != nil {
+//     //     fmt.Println("Starting from scratch, error loading data:", err)
+//     // }
+
+//     links, err := BfsScrapper(StringToWikiUrl("Chicken"))
+//     if err != nil {
+//         fmt.Println("Error scraping links:", err)
+//     }
+
+//     fmt.Println(links)
+// }
