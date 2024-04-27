@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from "react";
 import { BounceLoader } from "react-spinners";
 
+// Function for loading text animation
 const LoadingDots = () => {
     const [dots, setDots] = useState("");
   
@@ -14,9 +15,12 @@ const LoadingDots = () => {
   
     return <span className="font-raleway text-yellow-300 text-lg font-semibold animate-pulse">loading{dots}</span>;
   };
+
+
 const Loading = () => {
     return (
         <div className="flex flex-col justify-center items-center p-5">
+            {/* REACT SPINNERS ANIMATION */}
             <div className="flex flex-col justify-center items-center">
                 <BounceLoader
                     color="#f6cc6e"

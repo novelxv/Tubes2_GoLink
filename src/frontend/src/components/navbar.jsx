@@ -7,6 +7,7 @@ const Navbar = () => {
     return (
         <nav className="p-4 font-raleway absolute top-0 right-0"> 
             <div className="flex">
+                {/* AUTHORS */}
                 <div className="flex space-x-4">
                     <Drawer>
                         <DrawerTrigger asChild>
@@ -41,6 +42,7 @@ const Navbar = () => {
                         </DrawerContent>
                     </Drawer>
                     <p className="font-medium  text-lg text-white hover:text-neutral-100">|</p>
+                    {/* GITHUB */}
                     <a href="https://github.com/novelxv/Tubes2_GoLink" target="_blank" className="font-medium  text-lg text-white hover:text-neutral-100 hover:underline">Github</a>
                 </div>
             </div>

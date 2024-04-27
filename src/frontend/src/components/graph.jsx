@@ -7,11 +7,11 @@ const Graph = ({node,link}) => {
     useEffect(() => {
         const data = { nodes: node, links: link };
 
-
+        // Graph container size
         const width = 1000;
         const height = 700;
 
-
+        // Function to count number of nodes in each level
         const countNodesPerLevel = (nodes) => {
             const maxLevel = Math.max(...nodes.map(node => node.level));
             
@@ -24,7 +24,8 @@ const Graph = ({node,link}) => {
             return nodesPerLevel;
         };
     
-        
+        // Function to distribute node evenly on the x axis
+        // Returns matrix with each node's position in each level
         const calculateXPositions = (numElementsPerLevel, width) => {
             const matrix = [];
             for (let i = 0; i < numElementsPerLevel.length; i++) {
@@ -38,12 +39,7 @@ const Graph = ({node,link}) => {
             return matrix;
         };
 
-
-
-        
-        const nodesPerLevel = countNodesPerLevel(node);
-        const positionsMatrix = calculateXPositions(nodesPerLevel, width);
-        
+        // Function to update all of the node's x position based on the distribution
         const updateNodeXPositions = (nodes, positionsMatrix) => {
             // Update x positions for each node
             nodes.forEach(node => {
@@ -56,40 +52,53 @@ const Graph = ({node,link}) => {
                 }
             });
         };
-
-       
-        updateNodeXPositions(node,positionsMatrix);
-        // Main color
-        const startColor = '#FB7185' // rose-400
-        const endColor = '#1CD0A1' // emerald-400
-
-        // Color per level
-        const colorScale = d3.scaleOrdinal()
-            .domain(data.nodes.map(node => node.level))
-            .range(['#6027CC', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
-
-
-        const svg = d3.select(svgRef.current)
-        .attr('width', width)
-        .attr('height', height)
-        .style('background-color', '#f2f2f2')
-        .style('border-radius','15px');
-
         
-        // Split links
+        
+        // Function to split links
         function formatWikipediaUrl(url) {
             const lastSegment = url.split('/').pop();
             const formattedText = lastSegment.split('_').join(' ');
             return formattedText;
         }
 
+
+        // Function to open wiki page when clicked
         function handleClick(d) {
-            const url = d.url; // Access the 'url' property directly
+            const url = d.url; 
             if (url) {
                 window.open(url, '_blank'); // Open the URL in a new tab
             }
             console.log(url)
         }
+        
+        // Function to get node position based on ID
+        function getNodePosition(nodeId) {
+            const node = data.nodes.find(node => node.id === nodeId);
+            return { x: node.x, y: node.y };
+        }
+
+        
+        const nodesPerLevel = countNodesPerLevel(node);
+        const positionsMatrix = calculateXPositions(nodesPerLevel, width);
+        updateNodeXPositions(node,positionsMatrix);
+        
+        
+        // Main color
+        const startColor = '#FB7185' // rose-400
+        const endColor = '#1CD0A1' // emerald-400
+        
+        // Color per level
+        const colorScale = d3.scaleOrdinal()
+        .domain(data.nodes.map(node => node.level))
+        .range(['#6027CC', '#f6cc6e', '#47dcfc']) // violet, blue,yellow
+        
+
+        // Create container
+        const svg = d3.select(svgRef.current)
+        .attr('width', width)
+        .attr('height', height)
+        .style('background-color', '#f2f2f2')
+        .style('border-radius','15px');
         
 
         // Draw links
@@ -117,9 +126,7 @@ const Graph = ({node,link}) => {
                 if (d.level === Math.max(...data.nodes.map(node => node.level))) return endColor; // end
                 return colorScale(d.level % 3); // others
             })
-            .on("click", (event, d) => {
-                console.log("Clicked label data:", d); // Log the entire data object associated with the clicked element
-            });
+            .on("click", (event, d) => {handleClick(d)});
 
 
         // Add labels to nodes
@@ -136,9 +143,6 @@ const Graph = ({node,link}) => {
 
 
         // Legend
-        const legendWidth = 200;
-        const legendHeight = 150;
-
         const legend = svg.append("g")
             .attr("transform", `translate(20, 20)`);
 
@@ -167,11 +171,6 @@ const Graph = ({node,link}) => {
                 if (i === nodesPerLevel.length - 1) return `Level ${i+1} (End Article)`;
                 return `Level ${i + 1}`;
             });
-        // Function to get node position based on ID
-        function getNodePosition(nodeId) {
-            const node = data.nodes.find(node => node.id === nodeId);
-            return { x: node.x, y: node.y };
-        }
     }, [node,link]);
 
     return (

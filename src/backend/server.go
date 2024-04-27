@@ -31,6 +31,7 @@ type ResponseData struct {
 
 /* Main Function */
 func main() {
+
 	// load databases
 	scraper.LoadFromJSON("./scraper/final.json")
 	scraper.LoadFromJSON("./scraper/final2.json")
@@ -59,6 +60,7 @@ func main() {
 
 		var stats *golink.GoLinkStats
 		
+		// Choosing the alogrithms
 		if (!check) {
 			if (toggle){
 				stats = bfs.Bfsfunc(startLink,endLink,false)
