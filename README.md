@@ -116,10 +116,10 @@ Here is an overview of how IDS works:
 
 
 ## Screenshots
-![localhost_3000-GoogleChrome2024-04-2706-34-4811-ezgif com-speed](https://github.com/novelxv/Tubes2_GoLink/assets/118401646/a00ca9b0-6e22-4875-88cb-96d3e2d0beac)
+![Basic Overview of the Website](https://github.com/novelxv/Tubes2_GoLink/assets/118401646/a00ca9b0-6e22-4875-88cb-96d3e2d0beac){:width="300px"}
 _Basic Overview of the Website_
 
-![Graph Visualisation](https://github.com/novelxv/Tubes2_GoLink/assets/118401646/20044d30-1dfc-4c15-9092-37c372d0ef95)
+![Graph Visualisation](https://github.com/novelxv/Tubes2_GoLink/assets/118401646/20044d30-1dfc-4c15-9092-37c372d0ef95){:width="300px"}
 _Multiple solutions with graph visualisation interface_
 
 
