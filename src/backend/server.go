@@ -7,6 +7,8 @@ import (
 	"github.com/angiekierra/Tubes2_GoLink/bfs"
 	"github.com/angiekierra/Tubes2_GoLink/golink"
 	"github.com/angiekierra/Tubes2_GoLink/ids"
+	"github.com/angiekierra/Tubes2_GoLink/scraper"
+
 	"log"
 
 )
@@ -27,6 +29,9 @@ type ResponseData struct {
 
 // testing
 func main() {
+
+	scraper.LoadFromJSON("./scraper/final.json")
+	
 	r := gin.Default()
 
 	r.Use(cors.Default())

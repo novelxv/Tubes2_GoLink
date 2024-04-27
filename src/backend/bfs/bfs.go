@@ -134,12 +134,12 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 			mu.Lock()
 			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
 
-			const maxGoroutines = 1500 
+			const maxGoroutines = 10000 
 			sem := make(chan bool, maxGoroutines)
 
-			if len(links) > 100 {
-				links = links[:100]
-			}
+			// if len(links) > 100 {
+			// 	links = links[:100]
+			// }
 
 			sem = make(chan bool, maxGoroutines)
 
