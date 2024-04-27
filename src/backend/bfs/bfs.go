@@ -102,7 +102,7 @@ func SearchForGoalBfs(root *tree.Tree, goal string, stats *golink.GoLinkStats, m
 			links, _ := scraper.Scraper(scraper.StringToWikiUrl(node.Value))
 
 			// batasi jumlah goroutine
-			const maxGoroutines = 10000
+			const maxGoroutines = 5000
 			sem := make(chan bool, maxGoroutines)
 
 			visitedNodes := make(map[string]struct{})
