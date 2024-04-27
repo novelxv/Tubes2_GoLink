@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"github.com/gin-contrib/cors"
@@ -30,7 +30,13 @@ type ResponseData struct {
 // testing
 func main() {
 
+	// load first database
 	scraper.LoadFromJSON("./scraper/final.json")
+
+	// load second database
+	scraper.LoadFromJSON("./scraper/final2.json")
+	
+
 	
 	r := gin.Default()
 

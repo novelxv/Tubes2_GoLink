@@ -17,21 +17,21 @@ const Navbar = () => {
                                 <div className='flex flex-row p-5 items-center gap-10 justify-center'>
                                     <div className='flex flex-col items-center justify-center'>
                                         <div className='rounded-full overflow-hidden'>
-                                            <Image src="/download.jpg" alt='logo' width={100} height={100} />
+                                            <Image src="/shika.jpg" alt='logo' width={100} height={100} />
                                         </div>
                                         <p className='font-semibold text-l xl:text-xl '>Debrina Veisha Rashika W</p>
                                         <p className='text-m xl:text-l'>13522025</p>
                                     </div>
                                     <div className='flex flex-col items-center justify-center'>
                                         <div className='rounded-full overflow-hidden'>
-                                            <Image src="/download.jpg" alt='logo' width={100} height={100} />
+                                            <Image src="/angie.jpg" alt='logo' width={100} height={100} />
                                         </div>
                                         <p className='font-semibold flex-auto text-l xl:text-xl p-1'>Angelica Kierra Ninta Gurning</p>
                                         <p className='flex-auto text-m xl:text-l'>13522048</p>    
                                     </div>
                                     <div className='flex flex-col items-center justify-center'>
                                         <div className='rounded-full overflow-hidden'>
-                                            <Image src="/download.jpg" alt='logo' width={100} height={100} />
+                                            <Image src="/novel.jpg" alt='logo' width={100} height={100} />
                                         </div>
                                         <p className='font-semibold text-l xl:text-xl p-1'>Novelya Putri Ramadhani</p>
                                         <p className='text-m xl:text-l'>13522096</p>
