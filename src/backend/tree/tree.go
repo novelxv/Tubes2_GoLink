@@ -62,6 +62,7 @@ func IsGoalFound(s1 string, s2 string) bool {
 	return s1 == s2
 }
 
+// function to get the route to the goal
 func GoalRoute (n *Tree) [] string{
 	if n == nil {
 		return nil
