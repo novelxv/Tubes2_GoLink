@@ -58,7 +58,6 @@ func Idsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	stats.SetRuntime(time.Since(startTime))
 
 	if found {
-		PrintTreeIds(root)
 		stats.PrintStats()
 	}
 	found = false
@@ -119,8 +118,6 @@ func SearchForGoal(ctx context.Context, node *tree.Tree, goal string, currentLev
 			single = true
 		}
 	}
-
-	fmt.Printf("%s \n", node.Value)
 
 	// add the goal to main route
 	if tree.IsGoalFound(node.Value, goal) {

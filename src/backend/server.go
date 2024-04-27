@@ -34,8 +34,12 @@ func main() {
 
 	// load databases
 	scraper.LoadFromJSON("./scraper/final.json")
-	scraper.LoadFromJSON("./scraper/final2.json")
-	scraper.LoadFromJSON("./scraper/final3.json")
+
+	// will be used when loading other databases
+	// scraper.LoadFromJSON("./scraper/final2.json")
+	// scraper.LoadFromJSON("./scraper/final3.json")
+	// scraper.LoadFromJSON("./scraper/final4.json")
+	// scraper.LoadFromJSON("./scraper/final5.json")
 
 	r := gin.Default()
 
