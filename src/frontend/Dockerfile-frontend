@@ -1,4 +1,3 @@
-# Stage 1: Build the application
 FROM node:lts AS builder
 
 # Set the working directory

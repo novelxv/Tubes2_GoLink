@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { Raleway } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster";
-import ParticlesComponent from "@/components/particles";
+import ParticlesComponent from "@/components/ui/particles";
 
 const raleway = Raleway({
   subsets: ['latin'],
