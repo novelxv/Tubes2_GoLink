@@ -118,6 +118,26 @@ const Entry = () => {
         setEndLinkSuggestions([]);
     };
 
+    // const dummyResponseData = {
+    //     articlesVisited: 10,
+    //     articlesSearched: 20,
+    //     timeNeeded: 4,
+    //     articles: [
+    //         [
+    //           "https://en.wikipedia.org/wiki/Albert_Einstein",
+    //           "https://en.wikipedia.org/wiki/Relativy_theory",
+    //         //   "https://en.wikipedia.org/wiki/Mathematics",
+    //         //   "https://en.wikipedia.org/wiki/Calculus",
+    //         //   "https://en.wikipedia.org/wiki/AI",
+    //         //   "https://en.wikipedia.org/wiki/AB",
+    //         //   "https://en.wikipedia.org/wiki/AC",
+    //         //   "https://en.wikipedia.org/wiki/AD",
+    //         ],
+          
+    //       ]
+    // };
+
+
     return (
         <div className='bg-neutral-800 flex flex-col items-center justify-center h-full mt-20 pt-10'>
             <div className="absolute top-0 left-0 w-[571px] h-[442px] bg-emerald-400 rounded-full blur-[200px] -z-1"></div>

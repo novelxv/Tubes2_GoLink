@@ -134,6 +134,39 @@ const Graph = ({node,link}) => {
             .text(d => formatWikipediaUrl(d.url))
             .on("click", (event, d) => {handleClick(d)});
 
+
+        // Legend
+        const legendWidth = 200;
+        const legendHeight = 150;
+
+        const legend = svg.append("g")
+            .attr("transform", `translate(20, 20)`);
+
+        const legendItems = legend.selectAll('.legend-item')
+            .data(nodesPerLevel)
+            .enter().append('g')
+            .attr('class', 'legend-item')
+            .attr('transform', (d, i) => `translate(0, ${i * 20})`);
+
+        legendItems.append('circle')
+            .attr('cx', 10)
+            .attr('cy', 10)
+            .attr('r', 6)
+            .style('fill', (d,i) => {
+                if (i === 0) return startColor; // start
+                if (i === nodesPerLevel.length - 1) return endColor; // end
+                return colorScale(i % 3); // others
+            })
+
+        legendItems.append('text')
+            .attr('x', 20)
+            .attr('y', 10)
+            .attr('dy', '0.1em')
+            .text( (d,i) => {
+                if (i === 0) return 'Level 1 (Start Article)';
+                if (i === nodesPerLevel.length - 1) return `Level ${i+1} (End Article)`;
+                return `Level ${i + 1}`;
+            });
         // Function to get node position based on ID
         function getNodePosition(nodeId) {
             const node = data.nodes.find(node => node.id === nodeId);

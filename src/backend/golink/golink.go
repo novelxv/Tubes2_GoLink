@@ -48,6 +48,7 @@ func (g *GoLinkStats) SetRuntime(duration time.Duration) {
 	g.Runtime = duration
 }
 
+// fungsi untuk memeriksa apakah list sudah ada di dalam Route
 func SameList(listOfLists [][]string, checkList []string) bool {
 	// Iterasi melalui setiap list di Route
 	for _, list := range listOfLists {

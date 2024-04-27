@@ -10,7 +10,6 @@ import (
 	"github.com/angiekierra/Tubes2_GoLink/golink"
 )
 
-
 // main BFS function
 func Bfsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	startTime := time.Now()
@@ -42,7 +41,6 @@ func Bfsfunc(value string, goal string, multisol bool) *golink.GoLinkStats {
 	return stats
 }
 
-
 // function to print the tree using BFS
 func PrintTreeBfs(n *tree.Tree) {
 	queue := []*tree.Tree{n}
@@ -57,8 +55,6 @@ func PrintTreeBfs(n *tree.Tree) {
 	fmt.Println()
 }
 
-var mu sync.Mutex
-
 // function to search the word goal with BFS
 func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	queue := []*tree.Tree{n}
@@ -67,7 +63,7 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		queue = queue[1:]
 		if !current.Visited {
 			current.Visited = true
-			stats.AddTraversed()
+			stats.AddChecked()
 		}
 		
 		fmt.Printf("%s \n", current.Value)
@@ -75,18 +71,13 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 		if tree.IsGoalFound(current.Value, goal) {
 			fmt.Print("Found!!\n")
 			route := tree.GoalRoute(current)
-			for i := 0; i < len(route)-1; i++ {
-				stats.AddChecked()
-			}
 			stats.AddRoute(route)
 			return true
 		}
 		
-		mu.Lock()
 		linkName := scraper.StringToWikiUrl(current.Value)
 		links, _ := scraper.Scraper(linkName)
 		current.NewNodeLink(links)
-		mu.Unlock()
 
 		for _, child := range current.Children {
 			if !child.Visited {
@@ -96,6 +87,8 @@ func SearhForGoalBfs(n *tree.Tree, goal string, stats *golink.GoLinkStats) bool 
 	}
 	return false
 }
+
+var mu sync.Mutex
 
 func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats) bool {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -118,14 +111,11 @@ func SearchForGoalBfsMT(root *tree.Tree, goal string, stats *golink.GoLinkStats)
 			}
 
 			node.Visited = true
-			stats.AddTraversed()
+			stats.AddChecked()
 
 			if tree.IsGoalFound(node.Value, goal) {
 				fmt.Println("Found!!")
 				route := tree.GoalRoute(node)
-				for i := 0; i < len(route)-1; i++ {
-					stats.AddChecked()
-				}
 				stats.AddRoute(route)
 				cancel() // Notify to cancel all operations
 				return
@@ -202,14 +192,11 @@ func SearchForGoalBfsMTMS(root *tree.Tree, goal string, stats *golink.GoLinkStat
 			}
 
 			node.Visited = true
-			stats.AddTraversed()
+			stats.AddChecked()
 
 			if tree.IsGoalFound(node.Value, goal) {
 				fmt.Println("Found!!")
 				route := tree.GoalRoute(node)
-				for i := 0; i < len(route)-1; i++ {
-					stats.AddChecked()
-				}
 				stats.AddRoute(route)
 				found = true
 				solutionDepth = len(route) - 1
